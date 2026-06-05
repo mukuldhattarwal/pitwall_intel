@@ -1,7 +1,18 @@
-# PITWALL INTEL
-### Data Driven. Race Ready.
+<div align="center">
 
-F1 Race Result Predictor — XGBoost + [OpenF1 API](https://openf1.org/) + Streamlit
+<h1>PITWALL INTEL</h1>
+
+<p><strong>Data Driven. Race Ready.</strong></p>
+
+<p>F1 Race Result Predictor with XGBoost, OpenF1 API, and Streamlit</p>
+
+<p>
+    <a href="https://pitwall-intel.streamlit.app/"><img src="https://img.shields.io/badge/Live%20App-pitwall--intel.streamlit.app-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Live App" /></a>
+    <a href="https://github.com/mukuldhattarwal/pitwall_intel"><img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github" alt="GitHub Repository" /></a>
+    <a href="https://openf1.org/"><img src="https://img.shields.io/badge/Data-OpenF1-0F9D58?style=for-the-badge" alt="OpenF1" /></a>
+</p>
+
+</div>
 
 ## LIVE DEMO
 
@@ -132,3 +143,16 @@ pitwall_intel/
 ---
 
 *PitWall Intel v1.0 — For educational use only*
+
+## 👤 Author
+
+<div align="center">
+
+**Mukul Dhattarwal**
+Data Science Enthusiast
+
+[![Live App](https://img.shields.io/badge/🚀%20Live%20App-pitwall--intel.streamlit.app-FF4B4B?style=flat-square)](https://pitwall-intel.streamlit.app/)
+[![GitHub](https://img.shields.io/badge/GitHub-pitwall__intel-181717?style=flat-square&logo=github)](https://github.com/mukuldhattarwal/pitwall_intel)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Mukul-0A66C2?style=flat-square&logo=linkedin)](https://linkedin.com/in/mukuldhattarwal)
+
+---
