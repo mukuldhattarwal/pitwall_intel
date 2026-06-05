@@ -1,0 +1,72 @@
+year,meeting_key,session_key,circuit_short_name,circuit_key,country_name,location,date_start
+2023,1141,7953,Sakhir,63,Bahrain,Sakhir,2023-03-05T15:00:00+00:00
+2023,1142,7779,Jeddah,149,Saudi Arabia,Jeddah,2023-03-19T17:00:00+00:00
+2023,1143,7787,Melbourne,10,Australia,Melbourne,2023-04-02T05:00:00+00:00
+2023,1207,9070,Baku,144,Azerbaijan,Baku,2023-04-30T11:00:00+00:00
+2023,1208,9078,Miami,151,United States,Miami,2023-05-07T19:30:00+00:00
+2023,1209,9086,Imola,6,Italy,Imola,2023-05-21T13:00:00+00:00
+2023,1210,9094,Monte Carlo,22,Monaco,Monaco,2023-05-28T13:00:00+00:00
+2023,1211,9102,Catalunya,15,Spain,Barcelona,2023-06-04T13:00:00+00:00
+2023,1212,9110,Montreal,23,Canada,Montréal,2023-06-18T18:00:00+00:00
+2023,1213,9118,Spielberg,19,Austria,Spielberg,2023-07-02T13:00:00+00:00
+2023,1214,9126,Silverstone,2,United Kingdom,Silverstone,2023-07-09T14:00:00+00:00
+2023,1215,9133,Hungaroring,4,Hungary,Budapest,2023-07-23T13:00:00+00:00
+2023,1216,9141,Spa-Francorchamps,7,Belgium,Spa-Francorchamps,2023-07-30T13:00:00+00:00
+2023,1217,9149,Zandvoort,55,Netherlands,Zandvoort,2023-08-27T13:00:00+00:00
+2023,1218,9157,Monza,39,Italy,Monza,2023-09-03T13:00:00+00:00
+2023,1219,9165,Singapore,61,Singapore,Marina Bay,2023-09-17T12:00:00+00:00
+2023,1220,9173,Suzuka,46,Japan,Suzuka,2023-09-24T05:00:00+00:00
+2023,1221,9221,Lusail,150,Qatar,Lusail,2023-10-08T17:00:00+00:00
+2023,1222,9213,Austin,9,United States,Austin,2023-10-22T19:00:00+00:00
+2023,1223,9181,Mexico City,65,Mexico,Mexico City,2023-10-29T20:00:00+00:00
+2023,1224,9205,Interlagos,14,Brazil,São Paulo,2023-11-05T17:00:00+00:00
+2023,1225,9189,Las Vegas,152,United States,Las Vegas,2023-11-19T06:00:00+00:00
+2023,1226,9197,Yas Marina Circuit,70,United Arab Emirates,Yas Island,2023-11-26T13:00:00+00:00
+2024,1229,9472,Sakhir,63,Bahrain,Sakhir,2024-03-02T15:00:00+00:00
+2024,1230,9480,Jeddah,149,Saudi Arabia,Jeddah,2024-03-09T17:00:00+00:00
+2024,1231,9488,Melbourne,10,Australia,Melbourne,2024-03-24T04:00:00+00:00
+2024,1232,9496,Suzuka,46,Japan,Suzuka,2024-04-07T05:00:00+00:00
+2024,1233,9673,Shanghai,49,China,Shanghai,2024-04-21T07:00:00+00:00
+2024,1234,9507,Miami,151,United States,Miami,2024-05-05T20:00:00+00:00
+2024,1235,9515,Imola,6,Italy,Imola,2024-05-19T13:00:00+00:00
+2024,1236,9523,Monte Carlo,22,Monaco,Monaco,2024-05-26T13:00:00+00:00
+2024,1237,9531,Montreal,23,Canada,Montréal,2024-06-09T18:00:00+00:00
+2024,1238,9539,Catalunya,15,Spain,Barcelona,2024-06-23T13:00:00+00:00
+2024,1239,9550,Spielberg,19,Austria,Spielberg,2024-06-30T13:00:00+00:00
+2024,1240,9558,Silverstone,2,United Kingdom,Silverstone,2024-07-07T14:00:00+00:00
+2024,1241,9566,Hungaroring,4,Hungary,Budapest,2024-07-21T13:00:00+00:00
+2024,1242,9574,Spa-Francorchamps,7,Belgium,Spa-Francorchamps,2024-07-28T13:00:00+00:00
+2024,1243,9582,Zandvoort,55,Netherlands,Zandvoort,2024-08-25T13:00:00+00:00
+2024,1244,9590,Monza,39,Italy,Monza,2024-09-01T13:00:00+00:00
+2024,1245,9598,Baku,144,Azerbaijan,Baku,2024-09-15T11:00:00+00:00
+2024,1246,9606,Singapore,61,Singapore,Marina Bay,2024-09-22T12:00:00+00:00
+2024,1247,9617,Austin,9,United States,Austin,2024-10-20T19:00:00+00:00
+2024,1248,9625,Mexico City,65,Mexico,Mexico City,2024-10-27T20:00:00+00:00
+2024,1249,9636,Interlagos,14,Brazil,São Paulo,2024-11-03T15:30:00+00:00
+2024,1250,9644,Las Vegas,152,United States,Las Vegas,2024-11-24T06:00:00+00:00
+2024,1251,9655,Lusail,150,Qatar,Lusail,2024-12-01T16:00:00+00:00
+2024,1252,9662,Yas Marina Circuit,70,United Arab Emirates,Yas Island,2024-12-08T13:00:00+00:00
+2025,1254,9693,Melbourne,10,Australia,Melbourne,2025-03-16T04:00:00+00:00
+2025,1255,9998,Shanghai,49,China,Shanghai,2025-03-23T07:00:00+00:00
+2025,1256,10006,Suzuka,46,Japan,Suzuka,2025-04-06T05:00:00+00:00
+2025,1257,10014,Sakhir,63,Bahrain,Sakhir,2025-04-13T15:00:00+00:00
+2025,1258,10022,Jeddah,149,Saudi Arabia,Jeddah,2025-04-20T17:00:00+00:00
+2025,1259,10033,Miami,151,United States,Miami Gardens,2025-05-04T20:00:00+00:00
+2025,1260,9987,Imola,6,Italy,Imola,2025-05-18T13:00:00+00:00
+2025,1261,9979,Monte Carlo,22,Monaco,Monaco,2025-05-25T13:00:00+00:00
+2025,1262,9971,Catalunya,15,Spain,Barcelona,2025-06-01T13:00:00+00:00
+2025,1263,9963,Montreal,23,Canada,Montréal,2025-06-15T18:00:00+00:00
+2025,1264,9955,Spielberg,19,Austria,Spielberg,2025-06-29T13:00:00+00:00
+2025,1277,9947,Silverstone,2,United Kingdom,Silverstone,2025-07-06T14:00:00+00:00
+2025,1265,9939,Spa-Francorchamps,7,Belgium,Spa-Francorchamps,2025-07-27T13:00:00+00:00
+2025,1266,9928,Hungaroring,4,Hungary,Budapest,2025-08-03T13:00:00+00:00
+2025,1267,9920,Zandvoort,55,Netherlands,Zandvoort,2025-08-31T13:00:00+00:00
+2025,1268,9912,Monza,39,Italy,Monza,2025-09-07T13:00:00+00:00
+2025,1269,9904,Baku,144,Azerbaijan,Baku,2025-09-21T11:00:00+00:00
+2025,1270,9896,Singapore,61,Singapore,Marina Bay,2025-10-05T12:00:00+00:00
+2025,1271,9888,Austin,9,United States,Austin,2025-10-19T19:00:00+00:00
+2025,1272,9877,Mexico City,65,Mexico,Mexico City,2025-10-26T20:00:00+00:00
+2025,1273,9869,Interlagos,14,Brazil,São Paulo,2025-11-09T17:00:00+00:00
+2025,1274,9858,Las Vegas,152,United States,Las Vegas,2025-11-23T04:00:00+00:00
+2025,1275,9850,Lusail,150,Qatar,Lusail,2025-11-30T16:00:00+00:00
+2025,1276,9839,Yas Marina Circuit,70,United Arab Emirates,Yas Island,2025-12-07T13:00:00+00:00
