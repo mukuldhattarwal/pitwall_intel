@@ -3,6 +3,10 @@
 
 F1 Race Result Predictor — XGBoost + [OpenF1 API](https://openf1.org/) + Streamlit
 
+## LIVE DEMO
+
+- Streamlit App: [https://pitwall-intel.streamlit.app/](https://pitwall-intel.streamlit.app/)
+
 ---
 
 ## SETUP
