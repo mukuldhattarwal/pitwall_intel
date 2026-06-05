@@ -1,7 +1,7 @@
 # PITWALL INTEL
 ### Data Driven. Race Ready.
 
-F1 Race Result Predictor — XGBoost + OpenF1 API + Streamlit
+F1 Race Result Predictor — XGBoost + [OpenF1 API](https://openf1.org/) + Streamlit
 
 ---
 
@@ -54,7 +54,7 @@ The app will open at the URL printed by Streamlit (typically http://localhost:85
 1. Open the app in your browser
 2. Click **"Fetch + Train Model"** in the left sidebar
 3. Wait 3–8 minutes while the pipeline:
-   - Downloads 3 seasons of F1 data from OpenF1 API
+    - Downloads 3 seasons of F1 data from [OpenF1 API](https://openf1.org/)
    - Engineers features (driver form, quali delta, tyre strategy, etc.)
    - Trains XGBoost and Random Forest models
 4. Once complete, go to **Race Predictor** and run predictions
@@ -98,7 +98,7 @@ pitwall_intel/
 
 ## DATA SOURCES
 
-- **OpenF1 API** (openf1.org) — free, no API key needed
+- **[OpenF1 API](https://openf1.org/)** — free, no API key needed
 - Sessions, results, grids, stints, pit stops, weather, standings
 - Coverage: 2023, 2024, 2025 seasons
 
