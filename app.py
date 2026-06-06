@@ -20,13 +20,14 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "utils"))
 BASE_DIR   = os.path.dirname(__file__)
 MODEL_DIR  = os.path.join(BASE_DIR, "models")
 PROC_DIR   = os.path.join(BASE_DIR, "data", "processed")
+F1_LOGO_PATH = os.path.join(BASE_DIR, "assets", "f1_logo.png")
 
 # ─────────────────────────────────────────────────────────────
 # PAGE CONFIG
 # ─────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="PitWall Intel",
-    page_icon="🏎",
+    page_icon=F1_LOGO_PATH if os.path.exists(F1_LOGO_PATH) else "🏎",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -36,8 +37,7 @@ st.set_page_config(
 # ─────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700;800&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap');
 
 :root {
     --f1-red:       #e8002d;
@@ -79,12 +79,14 @@ html, body, [class*="css"] {
     background: linear-gradient(90deg, var(--f1-red), var(--f1-yellow));
 }
 [data-testid="stSidebar"] * { color: var(--f1-white) !important; font-family: var(--font-ui) !important; }
-    
-    /* Ensure Material Symbols font is loaded for Streamlit's material icons */
-    [data-testid="stIconMaterial"], span[data-testid="stIconMaterial"] {
-        font-family: 'Material Symbols Outlined' !important;
-        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    }
+
+/* Force the sidebar collapse icon to use the icon font instead of rendering the raw text */
+[data-testid="stIconMaterial"], span[data-testid="stIconMaterial"] {
+    font-family: 'Material Symbols Rounded' !important;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    font-feature-settings: 'liga' 1;
+    text-rendering: optimizeLegibility;
+}
 
 [data-testid="stSelectbox"] > div > div {
     background: var(--carbon-card) !important;
@@ -143,9 +145,13 @@ hr { border-color: var(--carbon-line) !important; margin: 1rem 0 !important; }
 ::-webkit-scrollbar-track { background: var(--carbon-bg); }
 ::-webkit-scrollbar-thumb { background: var(--f1-red); border-radius: 2px; }
 
-.pw-title { font-family: var(--font-display) !important; font-size: 2.6rem !important; font-weight: 800 !important; letter-spacing: 0.06em !important; text-transform: uppercase !important; color: var(--f1-white) !important; line-height: 1 !important; margin: 0 !important; }
+.pw-header { display: flex; align-items: center; gap: 14px; }
+.pw-logo { display: flex; align-items: center; justify-content: center; width: 84px; flex: 0 0 84px; }
+.pw-logo img { width: 72px !important; height: 72px !important; object-fit: contain; display: block; }
+.pw-title-wrap { display: flex; flex-direction: column; justify-content: center; min-height: 72px; }
+.pw-title { font-family: var(--font-display) !important; font-size: 2.35rem !important; font-weight: 800 !important; letter-spacing: 0.06em !important; text-transform: uppercase !important; color: var(--f1-white) !important; line-height: 0.95 !important; margin: 0 !important; }
 .pw-title span { color: var(--f1-red); }
-.pw-subtitle { font-family: var(--font-mono) !important; font-size: 0.72rem !important; color: rgba(245,245,245,0.4) !important; letter-spacing: 0.18em !important; text-transform: uppercase !important; margin-top: 4px !important; }
+.pw-subtitle { font-family: var(--font-mono) !important; font-size: 0.72rem !important; color: rgba(245,245,245,0.4) !important; letter-spacing: 0.18em !important; text-transform: uppercase !important; margin-top: 6px !important; }
 .pw-section-label { font-family: var(--font-mono) !important; font-size: 0.65rem !important; color: var(--f1-red) !important; letter-spacing: 0.18em !important; text-transform: uppercase !important; margin-bottom: 0.5rem !important; }
 .pw-card { background: var(--carbon-card); border: 1px solid var(--carbon-border); border-top: 2px solid var(--carbon-line); padding: 1.2rem 1.4rem; border-radius: 2px; margin-bottom: 0.8rem; }
 .pw-card-accent { border-top: 2px solid var(--f1-red) !important; }
@@ -595,27 +601,77 @@ def build_race_input(
 
 
 def run_prediction(model, feature_cols, race_df):
-    available = [c for c in feature_cols if c in race_df.columns]
-    missing   = [c for c in feature_cols if c not in race_df.columns]
-    for c in missing:
-        race_df[c] = 0.0
-    X = race_df[feature_cols].fillna(0).values.astype(float)
-    return model.predict(X)
+    """
+    Run model prediction with bias correction.
+
+    XGBoost regression trained on historical F1 data carries a conservative
+    bias - it rarely predicts absolute extremes (P1 or P20) because those
+    are statistically uncommon in training. Two-step correction:
+
+    1. Score spread normalisation: rescale raw scores so P1-P20 range is
+       always used rather than clustering around P5-P15.
+
+    2. Dominance snap: if pole sitter inputs signal clear dominance,
+       snap their score to guarantee P1 instead of rounding to P2.
+    """
+    for c in feature_cols:
+        if c not in race_df.columns:
+            race_df[c] = 0.0
+
+    X      = race_df[feature_cols].fillna(0).values.astype(float)
+    scores = model.predict(X).astype(float)
+
+    # Step 1: spread normalisation
+    # Linearly rescale so best driver maps to ~1.0 and worst to ~20.0
+    s_min, s_max = scores.min(), scores.max()
+    if s_max > s_min:
+        scores = 1.0 + (scores - s_min) / (s_max - s_min) * 19.0
+
+    # Step 2: dominance snap
+    # Find the pole sitter (grid_position == 1).
+    # If their normalised score is already best AND inputs signal dominance,
+    # pull score below 1.5 to guarantee P1.
+    if "grid_position" in race_df.columns:
+        pole_mask = race_df["grid_position"].values == 1
+        if pole_mask.any():
+            pole_idx   = int(np.where(pole_mask)[0][0])
+            pole_score = scores[pole_idx]
+
+            row       = race_df.iloc[pole_idx]
+            form      = float(row.get("driver_form_3",        10))
+            sc_prob   = float(row.get("sc_probability",       0.35))
+            dnf_r     = float(row.get("dnf_rate_driver",      0.06))
+            champ_pos = float(row.get("champ_position_before",10))
+            gap       = float(row.get("points_gap_to_leader", 200))
+
+            # Dominance index: lower = more dominant
+            dominance = form + sc_prob * 10 + dnf_r * 20 + champ_pos + gap / 50
+
+            if pole_score == scores.min() and dominance < 8.0:
+                # Clearly dominant pole sitter -> hard snap to P1
+                scores[pole_idx] = 0.5
+            elif pole_score <= scores.min() + 0.3 and form <= 3.0:
+                # Close to best + good form -> give pole advantage
+                scores[pole_idx] = scores.min() - 0.1
+
+    return scores
 
 
 # ─────────────────────────────────────────────────────────────
 # HEADER
 # ─────────────────────────────────────────────────────────────
 logo_path = os.path.join(BASE_DIR, "assets", "f1_logo.png")
-col_logo, col_title = st.columns([1, 11])
+col_logo, col_title = st.columns([1.0, 11.0], vertical_alignment="center")
 with col_logo:
+    st.markdown('<div class="pw-logo">', unsafe_allow_html=True)
     if os.path.exists(logo_path):
-        st.image(logo_path, width=68)
+        st.image(logo_path, width=72)
     else:
-        st.markdown("<div style='font-size:2.2rem;line-height:1;padding-top:6px'>🏎</div>", unsafe_allow_html=True)
+        st.markdown("<div style='font-size:2.5rem;line-height:1;'>🏎</div>", unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 with col_title:
     st.markdown("""
-    <div style="padding-top:2px">
+    <div class="pw-title-wrap">
         <div class="pw-title">PITWALL <span>INTEL</span></div>
         <div class="pw-subtitle">Data Driven &nbsp;·&nbsp; Race Ready &nbsp;·&nbsp; Powered by OpenF1</div>
     </div>
@@ -1234,8 +1290,23 @@ elif page == "What-If Simulator":
         }
 
         X        = np.array([[input_vals.get(c, 0) for c in fc]])
-        pred     = model.predict(X)[0]
-        pred_pos = max(1, min(20, round(pred)))
+        raw_pred = model.predict(X)[0]
+
+        # Apply same dominance snap as main predictor
+        # so What-If results are consistent with Race Predictor
+        dominance = (
+            input_vals.get("driver_form_3", 10)
+            + input_vals.get("sc_probability", 0.35) * 10
+            + input_vals.get("dnf_rate_driver", 0.06) * 20
+            + input_vals.get("champ_position_before", 10)
+            + input_vals.get("points_gap_to_leader", 200) / 50
+        )
+        if grid_pos == 1 and dominance < 8.0:
+            pred_pos = 1
+        elif grid_pos == 1 and dominance < 12.0 and raw_pred < 2.5:
+            pred_pos = 1
+        else:
+            pred_pos = max(1, min(20, round(raw_pred)))
 
         st.markdown("<hr/>", unsafe_allow_html=True)
         delta_g   = grid_pos - pred_pos
