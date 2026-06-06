@@ -1,157 +1,289 @@
 <div align="center">
 
-<h1>🏎️PITWALL INTEL🏁</h1>
 
-<p><strong>Data Driven. Race Ready.</strong></p>
+# PITWALL INTEL
 
-<p>F1 Race Result Predictor with XGBoost, OpenF1 API, and Streamlit</p>
 
-<p>
-    <a href="https://pitwall-intel.streamlit.app/"><img src="https://img.shields.io/badge/Live%20App-pitwall--intel.streamlit.app-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Live App" /></a>
-    <a href="https://openf1.org/"><img src="https://img.shields.io/badge/Data-OpenF1-0F9D58?style=for-the-badge" alt="OpenF1" /></a>
-</p>
 
-</div>
+> **DATA DRIVEN &nbsp;·&nbsp; RACE READY &nbsp;·&nbsp; POWERED BY OPENF1**
 
-## LIVE DEMO
+<br/>
 
-- Streamlit App: [https://pitwall-intel.streamlit.app/](https://pitwall-intel.streamlit.app/)
+[![Live App](https://img.shields.io/badge/▶%20LIVE%20APP-pitwall--intel.streamlit.app-E8002D?style=for-the-badge&labelColor=0a0a0a)](https://pitwall-intel.streamlit.app/)
+&nbsp;
+[![OpenF1](https://img.shields.io/badge/DATA-OPENF1.ORG-FFCD00?style=for-the-badge&labelColor=0a0a0a)](https://openf1.org/)
+&nbsp;
+[![Python](https://img.shields.io/badge/PYTHON-3.10+-3776AB?style=for-the-badge&labelColor=0a0a0a&logo=python&logoColor=white)](https://python.org/)
+&nbsp;
+[![XGBoost](https://img.shields.io/badge/MODEL-XGBOOST-00ADD8?style=for-the-badge&labelColor=0a0a0a)](https://xgboost.readthedocs.io/)
+
+<br/>
+<br/>
 
 ---
 
+<br/>
+
+</div>
+
+## WHAT IS THIS
+
+**PitWall Intel** is an F1 race result predictor that thinks like a race engineer. It pulls 3 seasons of real Formula 1 data from the OpenF1 API, engineers predictive features from qualifying pace, tyre strategy, championship pressure, and weather — then runs an XGBoost model to predict the full race finishing order before lights out.
+
+Built for intermediate data science students who want a real project with real data and results worth showing off.
+
+<br/>
+
+---
+
+<br/>
+
+## SCREENS
+
+<br/>
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  01  RACE PREDICTOR       Select a GP · set grid · run the model│
+│  02  MODEL PERFORMANCE    MAE · RMSE · podium accuracy · SHAP   │
+│  03  DATA EXPLORER        Browse 3 seasons of race data         │
+│  04  WHAT-IF SIMULATOR    Change inputs live · watch it shift   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+<br/>
+
+---
+
+<br/>
+
 ## SETUP
 
-### 1. Create & activate a virtual environment (recommended)
+<br/>
 
-Windows (PowerShell):
+### Step 1 — Create a virtual environment
+
+<details>
+<summary><strong>Windows (PowerShell)</strong></summary>
+
 ```powershell
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 ```
 
-Windows (cmd):
-```powershell
+</details>
+
+<details>
+<summary><strong>Windows (cmd)</strong></summary>
+
+```cmd
 python -m venv .venv
 .venv\Scripts\activate.bat
 ```
 
-macOS / Linux:
+</details>
+
+<details>
+<summary><strong>macOS / Linux</strong></summary>
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### 2. Install Python dependencies
+</details>
+
+<br/>
+
+### Step 2 — Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Run the app
+<br/>
 
-Locally:
+### Step 3 — Launch the app
+
 ```bash
 streamlit run app.py
 ```
 
-Windows (shortcut):
-```powershell
-.\run_windows.bat
-```
+Opens at **http://localhost:8501**
 
-The app will open at the URL printed by Streamlit (typically http://localhost:8501). If a different port is shown, open that URL instead.
+> **Windows shortcut:** double-click `run_windows.bat`
+> **Mac/Linux shortcut:** `./run_mac_linux.sh`
+
+<br/>
 
 ---
+
+<br/>
 
 ## FIRST RUN
 
-1. Open the app in your browser
-2. Click **"Fetch + Train Model"** in the left sidebar
-3. Wait 3–8 minutes while the pipeline:
-    - Downloads 3 seasons of F1 data from [OpenF1 API](https://openf1.org/)
-   - Engineers features (driver form, quali delta, tyre strategy, etc.)
-   - Trains XGBoost and Random Forest models
-4. Once complete, go to **Race Predictor** and run predictions
+<br/>
+
+```
+1  Open the app in your browser
+   ↓
+2  Click "Fetch + Train Model" in the sidebar
+   ↓
+3  Pipeline runs automatically (3 – 8 min)
+   ├─ Downloads 3 seasons from OpenF1 API
+   ├─ Engineers all predictive features
+   ├─ Trains XGBoost + Random Forest
+   └─ Saves models to /models/
+   ↓
+4  Go to Race Predictor → select a GP → Run Prediction
+```
+
+<br/>
+
+> **Note:** 404 and 429 warnings in the terminal are expected — some sessions have no data in OpenF1, and the API rate-limits heavy requests. The pipeline handles both automatically.
+
+<br/>
 
 ---
+
+<br/>
 
 ## PROJECT STRUCTURE
 
+<br/>
+
 ```
 pitwall_intel/
-├── app.py                        Main Streamlit application
-├── requirements.txt              Python dependencies
+│
+├── app.py                         Main Streamlit application
+├── requirements.txt               Python dependencies
+│
 ├── assets/
-│   └── f1_logo.png               F1 logo for header
+│   └── f1_logo.png                F1 logo shown in the header
+│
 ├── utils/
-│   ├── data_pipeline.py          OpenF1 data fetcher + feature engineering
-│   └── model_trainer.py          XGBoost + Random Forest training
+│   ├── data_pipeline.py           OpenF1 fetcher + feature engineering
+│   └── model_trainer.py           XGBoost + Random Forest training
+│
 ├── data/
-│   ├── raw/                      Raw API response CSVs
+│   ├── raw/                       Raw API responses saved as CSV
 │   └── processed/
-│       └── features_final.csv    Master feature dataset
+│       └── features_final.csv     Master feature dataset (~1,300 rows)
+│
 └── models/
-    ├── xgboost_model.pkl         Trained XGBoost model
-    ├── rf_model.pkl              Trained Random Forest model
-    ├── best_model.pkl            Best performing model
-    └── model_meta.pkl            Feature names + metrics
+    ├── xgboost_model.pkl          Primary model
+    ├── rf_model.pkl               Comparison model
+    ├── best_model.pkl             Best performer (auto-selected)
+    └── model_meta.pkl             Feature list + evaluation metrics
 ```
 
----
-
-## SCREENS
-
-| Screen | Description |
-|---|---|
-| Race Predictor | Select a GP, set weather + grid, run prediction |
-| Model Performance | MAE, RMSE, podium accuracy, feature importance |
-| Data Explorer | Browse the full training dataset |
-| What-If Simulator | Change inputs live and see prediction shift |
+<br/>
 
 ---
 
-## DATA SOURCES
+<br/>
 
-- **[OpenF1 API](https://openf1.org/)** — free, no API key needed
-- Sessions, results, grids, stints, pit stops, weather, standings
-- Coverage: 2023, 2024, 2025 seasons
+## DATA SOURCES & FEATURES
+
+<br/>
+
+**Source:** [OpenF1 API](https://openf1.org/) — free, no API key, REST-based
+
+**Seasons:** 2023 · 2024 · 2025 &nbsp;|&nbsp; **Coverage:** ~1,300 race-driver rows
+
+<br/>
+
+| Feature | Source | Description |
+|---|---|---|
+| `grid_position` | Starting Grid | Where the driver starts on the grid |
+| `quali_delta_to_pole` | Starting Grid | Gap to pole position in seconds |
+| `driver_form_3` | Session Results | Rolling avg of last 3 race finishes |
+| `circuit_specialist_score` | Session Results | Driver's historical avg at this circuit |
+| `total_stints` | Stints | Number of tyre stints (strategy complexity) |
+| `starting_compound` | Stints | Tyre compound at race start |
+| `avg_stop_duration` | Pit Stops | Average stationary pit stop time |
+| `champ_points_before` | Championship | Points entering the race weekend |
+| `champ_position_before` | Championship | Championship standing before the race |
+| `team_dnf_rate` | Derived | Constructor reliability score |
+| `rainfall` | Weather | Whether rain affected the race |
+| `track_temperature` | Weather | Track surface temperature |
+
+<br/>
 
 ---
+
+<br/>
 
 ## TECH STACK
 
-- **Python:** 3.10+
-- **Streamlit:** 1.35.0
-- **pandas:** 2.2.2
-- **numpy:** 1.26.4
-- **scikit-learn:** 1.4.2
-- **xgboost:** 2.0.3
-- **plotly:** 5.22.0
-- **shap:** 0.45.1
-- See `requirements.txt` for exact dependency list and versions
+<br/>
+
+| Layer | Technology |
+|---|---|
+| Language | Python 3.10+ |
+| UI Framework | Streamlit 1.35.0 |
+| Primary Model | XGBoost 2.0.3 |
+| Comparison Model | scikit-learn Random Forest |
+| Data Processing | pandas 2.2.2 · numpy 1.26.4 |
+| Visualisation | Plotly 5.22.0 |
+| Explainability | SHAP 0.45.1 |
+| Data Source | OpenF1 REST API |
+| Styling | Custom CSS — carbon fibre dark theme |
+
+<br/>
 
 ---
 
-## NOTES
+<br/>
 
-- DNFs are encoded as position 21 in the model
-- Time-based train/test split: trains on older seasons, tests on latest
-- What-If simulator runs the model live on every input change
-- Internet required for data fetch and driver/race info
+## MODEL NOTES
+
+<br/>
+
+```
+Training split   →   Time-based: older seasons train, latest season tests
+DNF encoding     →   Did Not Finish treated as position 21
+Evaluation       →   MAE (positions off) · RMSE · Podium Accuracy %
+Best model       →   Auto-selected between XGBoost and Random Forest
+What-If mode     →   Runs inference live on every slider change
+```
+
+<br/>
 
 ---
 
-*PitWall Intel v1.0 — For educational use only*
+<br/>
 
-## 👤 Author
+## AUTHOR
+
+<br/>
 
 <div align="center">
 
-**Mukul Dhattarwal**
-Data Science Enthusiast
+**MUKUL DHATTARWAL**
 
-[![Live App](https://img.shields.io/badge/🚀%20Live%20App-pitwall--intel.streamlit.app-FF4B4B?style=flat-square)](https://pitwall-intel.streamlit.app/)
+*Data Science Enthusiast*
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Mukul-0A66C2?style=flat-square&logo=linkedin)](https://linkedin.com/in/mukuldhattarwal)
+<br/>
+
+[![Live App](https://img.shields.io/badge/▶%20LIVE%20APP-pitwall--intel.streamlit.app-E8002D?style=flat-square&labelColor=0a0a0a)](https://pitwall-intel.streamlit.app/)
+&nbsp;&nbsp;
+[![LinkedIn](https://img.shields.io/badge/LINKEDIN-mukuldhattarwal-0A66C2?style=flat-square&labelColor=0a0a0a&logo=linkedin&logoColor=white)](https://linkedin.com/in/mukuldhattarwal)
+
+</div>
+
+<br/>
 
 ---
+
+<div align="center">
+
+<br/>
+
+```
+PITWALL INTEL v1.0  ·  FOR EDUCATIONAL USE ONLY  ·  DATA: OPENF1.ORG
+```
+
+<br/>
+
+</div>
