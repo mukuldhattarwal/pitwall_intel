@@ -22,12 +22,20 @@ MODEL_DIR  = os.path.join(BASE_DIR, "models")
 PROC_DIR   = os.path.join(BASE_DIR, "data", "processed")
 F1_LOGO_PATH = os.path.join(BASE_DIR, "assets", "f1_logo.png")
 
+_tab_icon = "🏎"
+try:
+    from PIL import Image as _PILImage
+    if os.path.exists(F1_LOGO_PATH):
+        _tab_icon = _PILImage.open(F1_LOGO_PATH)
+except Exception:
+    pass
+
 # ─────────────────────────────────────────────────────────────
 # PAGE CONFIG
 # ─────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="PitWall Intel",
-    page_icon=F1_LOGO_PATH if os.path.exists(F1_LOGO_PATH) else "🏎",
+    page_icon=_tab_icon,
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -37,7 +45,8 @@ st.set_page_config(
 # ─────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700;800&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
 :root {
     --f1-red:       #e8002d;
@@ -70,6 +79,25 @@ html, body, [class*="css"] {
     pointer-events: none; z-index: 0;
 }
 
+[data-testid="stIconMaterial"],
+span[data-testid="stIconMaterial"],
+[class*="material-symbols"],
+button[kind="header"] span,
+[data-testid="collapsedControl"] span,
+[data-testid="baseButton-header"] span {
+    font-family: 'Material Symbols Rounded' !important;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important;
+    font-feature-settings: 'liga' 1 !important;
+    font-size: 1.4rem !important;
+    line-height: 1 !important;
+    display: inline-block !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    white-space: nowrap !important;
+    direction: ltr !important;
+    -webkit-font-smoothing: antialiased !important;
+}
+
 [data-testid="stSidebar"] {
     background: linear-gradient(180deg, #0d0d0d 0%, #0a0a0a 100%) !important;
     border-right: 1px solid var(--carbon-border) !important;
@@ -78,15 +106,7 @@ html, body, [class*="css"] {
     content: ''; position: absolute; top:0; left:0; right:0; height:3px;
     background: linear-gradient(90deg, var(--f1-red), var(--f1-yellow));
 }
-[data-testid="stSidebar"] * { color: var(--f1-white) !important; font-family: var(--font-ui) !important; }
-
-/* Force the sidebar collapse icon to use the icon font instead of rendering the raw text */
-[data-testid="stIconMaterial"], span[data-testid="stIconMaterial"] {
-    font-family: 'Material Symbols Rounded' !important;
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    font-feature-settings: 'liga' 1;
-    text-rendering: optimizeLegibility;
-}
+[data-testid="stSidebar"] *:not(.material-symbols-rounded) { color: var(--f1-white) !important; font-family: var(--font-ui) !important; }
 
 [data-testid="stSelectbox"] > div > div {
     background: var(--carbon-card) !important;
@@ -145,13 +165,9 @@ hr { border-color: var(--carbon-line) !important; margin: 1rem 0 !important; }
 ::-webkit-scrollbar-track { background: var(--carbon-bg); }
 ::-webkit-scrollbar-thumb { background: var(--f1-red); border-radius: 2px; }
 
-.pw-header { display: flex; align-items: center; gap: 14px; }
-.pw-logo { display: flex; align-items: center; justify-content: center; width: 120px; flex: 0 0 120px; }
-.pw-logo img { width: 100px !important; height: 100px !important; object-fit: contain; display: block; }
-.pw-title-wrap { display: flex; flex-direction: column; justify-content: center; min-height: 100px; }
-.pw-title { font-family: var(--font-display) !important; font-size: 2.35rem !important; font-weight: 800 !important; letter-spacing: 0.06em !important; text-transform: uppercase !important; color: var(--f1-white) !important; line-height: 0.95 !important; margin: 0 !important; }
+.pw-title { font-family: var(--font-display) !important; font-size: 2.6rem !important; font-weight: 800 !important; letter-spacing: 0.06em !important; text-transform: uppercase !important; color: var(--f1-white) !important; line-height: 1 !important; margin: 0 !important; }
 .pw-title span { color: var(--f1-red); }
-.pw-subtitle { font-family: var(--font-mono) !important; font-size: 0.72rem !important; color: rgba(245,245,245,0.4) !important; letter-spacing: 0.18em !important; text-transform: uppercase !important; margin-top: 6px !important; }
+.pw-subtitle { font-family: var(--font-mono) !important; font-size: 0.72rem !important; color: rgba(245,245,245,0.4) !important; letter-spacing: 0.18em !important; text-transform: uppercase !important; margin-top: 4px !important; }
 .pw-section-label { font-family: var(--font-mono) !important; font-size: 0.65rem !important; color: var(--f1-red) !important; letter-spacing: 0.18em !important; text-transform: uppercase !important; margin-bottom: 0.5rem !important; }
 .pw-card { background: var(--carbon-card); border: 1px solid var(--carbon-border); border-top: 2px solid var(--carbon-line); padding: 1.2rem 1.4rem; border-radius: 2px; margin-bottom: 0.8rem; }
 .pw-card-accent { border-top: 2px solid var(--f1-red) !important; }
@@ -335,60 +351,64 @@ def load_prediction_priors():
 
     return driver_lookup, team_lookup, circuit_lookup
 
+# Complete 2026 F1 calendar — all 24 rounds.
+# Primary source when API is reachable; guaranteed fallback otherwise.
+F1_2026_CALENDAR = [
+    {"meeting_key": 1280, "meeting_name": "Australian Grand Prix",    "date_start": "2026-03-06", "circuit_short_name": "Melbourne",        "circuit_type": "Permanent",          "country_name": "Australia"},
+    {"meeting_key": 1281, "meeting_name": "Chinese Grand Prix",       "date_start": "2026-03-13", "circuit_short_name": "Shanghai",          "circuit_type": "Permanent",          "country_name": "China"},
+    {"meeting_key": 1282, "meeting_name": "Japanese Grand Prix",      "date_start": "2026-03-27", "circuit_short_name": "Suzuka",            "circuit_type": "Permanent",          "country_name": "Japan"},
+    {"meeting_key": 1283, "meeting_name": "Bahrain Grand Prix",       "date_start": "2026-04-10", "circuit_short_name": "Sakhir",            "circuit_type": "Permanent",          "country_name": "Bahrain"},
+    {"meeting_key": 1284, "meeting_name": "Saudi Arabian Grand Prix", "date_start": "2026-04-17", "circuit_short_name": "Jeddah",            "circuit_type": "Temporary - Street", "country_name": "Saudi Arabia"},
+    {"meeting_key": 1285, "meeting_name": "Miami Grand Prix",         "date_start": "2026-05-01", "circuit_short_name": "Miami",             "circuit_type": "Temporary - Street", "country_name": "United States"},
+    {"meeting_key": 1286, "meeting_name": "Canadian Grand Prix",      "date_start": "2026-05-22", "circuit_short_name": "Montreal",          "circuit_type": "Temporary - Street", "country_name": "Canada"},
+    {"meeting_key": 1287, "meeting_name": "Monaco Grand Prix",        "date_start": "2026-06-05", "circuit_short_name": "Monaco",            "circuit_type": "Temporary - Street", "country_name": "Monaco"},
+    {"meeting_key": 1288, "meeting_name": "Spanish Grand Prix",       "date_start": "2026-06-12", "circuit_short_name": "Barcelona",         "circuit_type": "Permanent",          "country_name": "Spain"},
+    {"meeting_key": 1289, "meeting_name": "Austrian Grand Prix",      "date_start": "2026-06-26", "circuit_short_name": "Spielberg",         "circuit_type": "Permanent",          "country_name": "Austria"},
+    {"meeting_key": 1290, "meeting_name": "British Grand Prix",       "date_start": "2026-07-03", "circuit_short_name": "Silverstone",       "circuit_type": "Permanent",          "country_name": "Great Britain"},
+    {"meeting_key": 1291, "meeting_name": "Belgian Grand Prix",       "date_start": "2026-07-17", "circuit_short_name": "Spa-Francorchamps", "circuit_type": "Permanent",          "country_name": "Belgium"},
+    {"meeting_key": 1292, "meeting_name": "Hungarian Grand Prix",     "date_start": "2026-07-24", "circuit_short_name": "Budapest",          "circuit_type": "Permanent",          "country_name": "Hungary"},
+    {"meeting_key": 1293, "meeting_name": "Dutch Grand Prix",         "date_start": "2026-08-21", "circuit_short_name": "Zandvoort",         "circuit_type": "Permanent",          "country_name": "Netherlands"},
+    {"meeting_key": 1294, "meeting_name": "Italian Grand Prix",       "date_start": "2026-09-04", "circuit_short_name": "Monza",             "circuit_type": "Permanent",          "country_name": "Italy"},
+    {"meeting_key": 1295, "meeting_name": "Madrid Grand Prix",        "date_start": "2026-09-11", "circuit_short_name": "Madrid",            "circuit_type": "Temporary - Street", "country_name": "Spain"},
+    {"meeting_key": 1296, "meeting_name": "Azerbaijan Grand Prix",    "date_start": "2026-09-25", "circuit_short_name": "Baku",              "circuit_type": "Temporary - Street", "country_name": "Azerbaijan"},
+    {"meeting_key": 1297, "meeting_name": "Singapore Grand Prix",     "date_start": "2026-10-09", "circuit_short_name": "Marina Bay",        "circuit_type": "Temporary - Street", "country_name": "Singapore"},
+    {"meeting_key": 1298, "meeting_name": "United States Grand Prix", "date_start": "2026-10-23", "circuit_short_name": "Austin",            "circuit_type": "Permanent",          "country_name": "United States"},
+    {"meeting_key": 1299, "meeting_name": "Mexico City Grand Prix",   "date_start": "2026-10-30", "circuit_short_name": "Mexico City",       "circuit_type": "Permanent",          "country_name": "Mexico"},
+    {"meeting_key": 1300, "meeting_name": "Brazilian Grand Prix",     "date_start": "2026-11-06", "circuit_short_name": "Sao Paulo",         "circuit_type": "Permanent",          "country_name": "Brazil"},
+    {"meeting_key": 1301, "meeting_name": "Las Vegas Grand Prix",     "date_start": "2026-11-19", "circuit_short_name": "Las Vegas",         "circuit_type": "Temporary - Street", "country_name": "United States"},
+    {"meeting_key": 1302, "meeting_name": "Qatar Grand Prix",         "date_start": "2026-11-27", "circuit_short_name": "Lusail",            "circuit_type": "Permanent",          "country_name": "Qatar"},
+    {"meeting_key": 1303, "meeting_name": "Abu Dhabi Grand Prix",     "date_start": "2026-12-04", "circuit_short_name": "Yas Marina",        "circuit_type": "Permanent",          "country_name": "UAE"},
+]
+
+
 @st.cache_data(ttl=1800)
 def fetch_upcoming_races():
-    fallback = [
-        {"meeting_name": "Bahrain Grand Prix", "date_start": "2024-03-02", "circuit_short_name": "Sakhir", "circuit_type": "Permanent", "meeting_key": 1229},
-        {"meeting_name": "Saudi Arabian Grand Prix", "date_start": "2024-03-09", "circuit_short_name": "Jeddah", "circuit_type": "Street", "meeting_key": 1230},
-        {"meeting_name": "Australian Grand Prix", "date_start": "2024-03-24", "circuit_short_name": "Melbourne", "circuit_type": "Street", "meeting_key": 1231},
-        {"meeting_name": "Japanese Grand Prix", "date_start": "2024-04-07", "circuit_short_name": "Suzuka", "circuit_type": "Permanent", "meeting_key": 1232},
-        {"meeting_name": "Chinese Grand Prix", "date_start": "2024-04-21", "circuit_short_name": "Shanghai", "circuit_type": "Permanent", "meeting_key": 1233},
-        {"meeting_name": "Miami Grand Prix", "date_start": "2024-05-05", "circuit_short_name": "Miami", "circuit_type": "Street", "meeting_key": 1234},
-        {"meeting_name": "Emilia Romagna Grand Prix", "date_start": "2024-05-19", "circuit_short_name": "Imola", "circuit_type": "Permanent", "meeting_key": 1235},
-        {"meeting_name": "Monaco Grand Prix", "date_start": "2024-05-26", "circuit_short_name": "Monaco", "circuit_type": "Street", "meeting_key": 1236},
-        {"meeting_name": "Canadian Grand Prix", "date_start": "2024-06-09", "circuit_short_name": "Montreal", "circuit_type": "Street", "meeting_key": 1237},
-        {"meeting_name": "Spanish Grand Prix", "date_start": "2024-06-23", "circuit_short_name": "Catalunya", "circuit_type": "Permanent", "meeting_key": 1238},
-        {"meeting_name": "Austrian Grand Prix", "date_start": "2024-06-30", "circuit_short_name": "Spielberg", "circuit_type": "Permanent", "meeting_key": 1239},
-        {"meeting_name": "British Grand Prix", "date_start": "2024-07-07", "circuit_short_name": "Silverstone", "circuit_type": "Permanent", "meeting_key": 1240},
-        {"meeting_name": "Hungarian Grand Prix", "date_start": "2024-07-21", "circuit_short_name": "Budapest", "circuit_type": "Permanent", "meeting_key": 1241},
-        {"meeting_name": "Belgian Grand Prix", "date_start": "2024-07-28", "circuit_short_name": "Spa-Francorchamps", "circuit_type": "Permanent", "meeting_key": 1242},
-        {"meeting_name": "Dutch Grand Prix", "date_start": "2024-08-25", "circuit_short_name": "Zandvoort", "circuit_type": "Permanent", "meeting_key": 1243},
-        {"meeting_name": "Italian Grand Prix", "date_start": "2024-09-01", "circuit_short_name": "Monza", "circuit_type": "Permanent", "meeting_key": 1244},
-        {"meeting_name": "Azerbaijan Grand Prix", "date_start": "2024-09-15", "circuit_short_name": "Baku", "circuit_type": "Street", "meeting_key": 1245},
-        {"meeting_name": "Singapore Grand Prix", "date_start": "2024-09-22", "circuit_short_name": "Singapore", "circuit_type": "Street", "meeting_key": 1246},
-        {"meeting_name": "United States Grand Prix", "date_start": "2024-10-20", "circuit_short_name": "Austin", "circuit_type": "Permanent", "meeting_key": 1247},
-        {"meeting_name": "Mexico City Grand Prix", "date_start": "2024-10-27", "circuit_short_name": "Mexico City", "circuit_type": "Permanent", "meeting_key": 1248},
-        {"meeting_name": "São Paulo Grand Prix", "date_start": "2024-11-03", "circuit_short_name": "Interlagos", "circuit_type": "Permanent", "meeting_key": 1249},
-        {"meeting_name": "Las Vegas Grand Prix", "date_start": "2024-11-23", "circuit_short_name": "Las Vegas", "circuit_type": "Street", "meeting_key": 1250},
-        {"meeting_name": "Qatar Grand Prix", "date_start": "2024-12-01", "circuit_short_name": "Lusail", "circuit_type": "Permanent", "meeting_key": 1251},
-        {"meeting_name": "Abu Dhabi Grand Prix", "date_start": "2024-12-08", "circuit_short_name": "Yas Marina", "circuit_type": "Permanent", "meeting_key": 1252}
-    ]
+    """
+    Returns the full 2026 F1 race calendar.
+    Tries the OpenF1 API first — uses it only if it returns >= 10 meetings.
+    Always falls back to F1_2026_CALENDAR so all 24 races appear in the
+    Grand Prix selector even when the API is unavailable or rate-limited.
+    """
     try:
-        year = datetime.now().year
-        r = requests.get(
-            "https://api.openf1.org/v1/meetings",
-            params={"year": year},
-            timeout=10
-        )
-        data = r.json()
-        
-        if not data or not isinstance(data, list):
+        for year in [datetime.now().year, datetime.now().year + 1]:
             r = requests.get(
                 "https://api.openf1.org/v1/meetings",
-                params={"year": year - 1},
-                timeout=10
+                params={"year": year},
+                timeout=8,
             )
-            data = r.json()
-
-        if isinstance(data, list) and data:
-            return sorted(
-                [m for m in data if isinstance(m, dict) and not m.get("is_cancelled", False)],
-                key=lambda x: x.get("date_start", "")
-            )
-        return fallback
+            if r.status_code == 200:
+                data = r.json()
+                if isinstance(data, list) and len(data) >= 10:
+                    cleaned = [
+                        m for m in data
+                        if isinstance(m, dict) and not m.get("is_cancelled", False)
+                    ]
+                    if len(cleaned) >= 10:
+                        return sorted(cleaned, key=lambda x: x.get("date_start", ""))
     except Exception:
-        return fallback
+        pass
 
+    return F1_2026_CALENDAR
 @st.cache_data(ttl=1800)
 def fetch_current_drivers(session_key="latest"):
     try:
@@ -397,10 +417,7 @@ def fetch_current_drivers(session_key="latest"):
             params={"session_key": session_key},
             timeout=10
         )
-        data = r.json()
-        if isinstance(data, list):
-            return data
-        return []
+        return r.json()
     except Exception:
         return []
 
@@ -418,15 +435,13 @@ def fetch_latest_championship():
         )
         data = r.json()
         result = {}
-        if isinstance(data, list):
-            for row in data:
-                if isinstance(row, dict):
-                    dn = row.get("driver_number")
-                    if dn:
-                        result[dn] = {
-                            "points":   row.get("points_current", row.get("points_start", 0)),
-                            "position": row.get("position_current", row.get("position_start", 10)),
-                        }
+        for row in data:
+            dn = row.get("driver_number")
+            if dn:
+                result[dn] = {
+                    "points":   row.get("points_current", row.get("points_start", 0)),
+                    "position": row.get("position_current", row.get("position_start", 10)),
+                }
         return result
     except Exception:
         return {}
@@ -445,10 +460,9 @@ def fetch_latest_stints_for_circuit(circuit_meeting_key):
             timeout=10
         )
         sessions = r.json()
-        if not sessions or not isinstance(sessions, list):
+        if not sessions:
             return {}
-        sk = sessions[0].get("session_key") if isinstance(sessions[0], dict) else None
-        if not sk: return {}
+        sk = sessions[0]["session_key"]
 
         r2 = requests.get(
             "https://api.openf1.org/v1/stints",
@@ -456,7 +470,7 @@ def fetch_latest_stints_for_circuit(circuit_meeting_key):
             timeout=10
         )
         stints = r2.json()
-        if not stints or not isinstance(stints, list):
+        if not stints:
             return {}
 
         df = pd.DataFrame(stints)
@@ -482,14 +496,13 @@ def fetch_latest_pit_efficiency(circuit_meeting_key):
             timeout=10
         )
         sessions = r.json()
-        if not sessions or not isinstance(sessions, list):
+        if not sessions:
             return {}
-        sk = sessions[0].get("session_key") if isinstance(sessions[0], dict) else None
-        if not sk: return {}
+        sk = sessions[0]["session_key"]
 
         r2 = requests.get("https://api.openf1.org/v1/pit", params={"session_key": sk}, timeout=10)
         pits = r2.json()
-        if not pits or not isinstance(pits, list):
+        if not pits:
             return {}
 
         df = pd.DataFrame(pits)
@@ -517,7 +530,7 @@ def fetch_race_control_sc_history(circuit_short_name):
             timeout=10
         )
         data = r.json()
-        if not data or not isinstance(data, list):
+        if not data:
             return 0.35  # F1 historical average ~35% SC per race
 
         df = pd.DataFrame(data)
@@ -706,17 +719,15 @@ def run_prediction(model, feature_cols, race_df):
 # HEADER
 # ─────────────────────────────────────────────────────────────
 logo_path = os.path.join(BASE_DIR, "assets", "f1_logo.png")
-col_logo, col_title = st.columns([1.2, 10.8], vertical_alignment="center")
+col_logo, col_title = st.columns([1, 11])
 with col_logo:
-    st.markdown('<div class="pw-logo">', unsafe_allow_html=True)
     if os.path.exists(logo_path):
-        st.image(logo_path, width=100)
+        st.image(logo_path, width=68)
     else:
-        st.markdown("<div style='font-size:3rem;line-height:1;'>🏎</div>", unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("<div style='font-size:2.2rem;line-height:1;padding-top:6px'>🏎</div>", unsafe_allow_html=True)
 with col_title:
     st.markdown("""
-    <div class="pw-title-wrap">
+    <div style="padding-top:2px">
         <div class="pw-title">PITWALL <span>INTEL</span></div>
         <div class="pw-subtitle">Data Driven &nbsp;·&nbsp; Race Ready &nbsp;·&nbsp; Powered by OpenF1</div>
     </div>
@@ -912,10 +923,17 @@ if page == "Race Predictor":
         seen, unique_drivers = set(), []
         if isinstance(raw_drivers, list):
             for d in raw_drivers:
-                if isinstance(d, dict) and d.get("driver_number") not in seen:
-                    seen.add(d.get("driver_number"))
+                if not isinstance(d, dict):
+                    continue
+                dn = d.get("driver_number")
+                if dn is not None and dn not in seen:
+                    seen.add(dn)
                     unique_drivers.append(d)
-        unique_drivers = unique_drivers[:20]
+
+        if not unique_drivers:
+            unique_drivers = FALLBACK_DRIVERS[:20]
+        else:
+            unique_drivers = unique_drivers[:20]
 
         # ── Priors from training data ──────────────────────
         priors = load_prediction_priors()

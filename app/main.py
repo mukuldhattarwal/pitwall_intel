@@ -18,7 +18,7 @@ from datetime import datetime
 # ── Page config ──────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="PitWall Intel",
-    page_icon="app/assets/f1_logo.svg",
+    page_icon="🏎️",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -95,7 +95,7 @@ def load_css():
         border-right: 1px solid var(--border) !important;
     }
 
-    [data-testid="stSidebar"] * {
+    [data-testid="stSidebar"] *:not(.material-symbols-rounded) {
         color: var(--text-primary) !important;
         font-family: 'Rajdhani', sans-serif !important;
     }
