@@ -146,9 +146,9 @@ hr { border-color: var(--carbon-line) !important; margin: 1rem 0 !important; }
 ::-webkit-scrollbar-thumb { background: var(--f1-red); border-radius: 2px; }
 
 .pw-header { display: flex; align-items: center; gap: 14px; }
-.pw-logo { display: flex; align-items: center; justify-content: center; width: 84px; flex: 0 0 84px; }
-.pw-logo img { width: 72px !important; height: 72px !important; object-fit: contain; display: block; }
-.pw-title-wrap { display: flex; flex-direction: column; justify-content: center; min-height: 72px; }
+.pw-logo { display: flex; align-items: center; justify-content: center; width: 120px; flex: 0 0 120px; }
+.pw-logo img { width: 100px !important; height: 100px !important; object-fit: contain; display: block; }
+.pw-title-wrap { display: flex; flex-direction: column; justify-content: center; min-height: 100px; }
 .pw-title { font-family: var(--font-display) !important; font-size: 2.35rem !important; font-weight: 800 !important; letter-spacing: 0.06em !important; text-transform: uppercase !important; color: var(--f1-white) !important; line-height: 0.95 !important; margin: 0 !important; }
 .pw-title span { color: var(--f1-red); }
 .pw-subtitle { font-family: var(--font-mono) !important; font-size: 0.72rem !important; color: rgba(245,245,245,0.4) !important; letter-spacing: 0.18em !important; text-transform: uppercase !important; margin-top: 6px !important; }
@@ -661,13 +661,13 @@ def run_prediction(model, feature_cols, race_df):
 # HEADER
 # ─────────────────────────────────────────────────────────────
 logo_path = os.path.join(BASE_DIR, "assets", "f1_logo.png")
-col_logo, col_title = st.columns([1.0, 11.0], vertical_alignment="center")
+col_logo, col_title = st.columns([1.2, 10.8], vertical_alignment="center")
 with col_logo:
     st.markdown('<div class="pw-logo">', unsafe_allow_html=True)
     if os.path.exists(logo_path):
-        st.image(logo_path, width=72)
+        st.image(logo_path, width=100)
     else:
-        st.markdown("<div style='font-size:2.5rem;line-height:1;'>🏎</div>", unsafe_allow_html=True)
+        st.markdown("<div style='font-size:3rem;line-height:1;'>🏎</div>", unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 with col_title:
     st.markdown("""
