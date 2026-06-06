@@ -140,7 +140,7 @@ Opens at **http://localhost:8501**
 
 <br/>
 
-> **Note:** 404 and 429 warnings in the terminal are expected — some sessions have no data in OpenF1, and the API rate-limits heavy requests. The pipeline handles both automatically.
+> **Note:** 404 and 429 warnings in the terminal are expected — some sessions have no data in OpenF1, and the API rate-limits heavy requests. The pipeline handles both automatically with built-in robust fallbacks.
 
 <br/>
 
@@ -156,6 +156,7 @@ Opens at **http://localhost:8501**
 pitwall_intel/
 │
 ├── app.py                         Main Streamlit application
+├── run.py                         Quick launch script for automated setup
 ├── requirements.txt               Python dependencies
 │
 ├── assets/
@@ -189,7 +190,7 @@ pitwall_intel/
 
 **Source:** [OpenF1 API](https://openf1.org/) — free, no API key, REST-based
 
-**Seasons:** 2023 · 2024 · 2025 &nbsp;|&nbsp; **Coverage:** ~1,300 race-driver rows
+**Seasons:** 2023 · 2024 · 2025 · 2026 &nbsp;|&nbsp; **Coverage:** ~1,500+ race-driver rows
 
 <br/>
 
@@ -203,8 +204,9 @@ pitwall_intel/
 | `starting_compound` | Stints | Tyre compound at race start |
 | `avg_stop_duration` | Pit Stops | Average stationary pit stop time |
 | `champ_points_before` | Championship | Points entering the race weekend |
-| `champ_position_before` | Championship | Championship standing before the race |
+| `points_gap_to_leader` | Derived | Point deficit to the current championship leader |
 | `team_dnf_rate` | Derived | Constructor reliability score |
+| `sc_probability` | Race Control | Historical safety car probability for the circuit |
 | `rainfall` | Weather | Whether rain affected the race |
 | `track_temperature` | Weather | Track surface temperature |
 
