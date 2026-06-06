@@ -337,19 +337,57 @@ def load_prediction_priors():
 
 @st.cache_data(ttl=1800)
 def fetch_upcoming_races():
+    fallback = [
+        {"meeting_name": "Bahrain Grand Prix", "date_start": "2024-03-02", "circuit_short_name": "Sakhir", "circuit_type": "Permanent", "meeting_key": 1229},
+        {"meeting_name": "Saudi Arabian Grand Prix", "date_start": "2024-03-09", "circuit_short_name": "Jeddah", "circuit_type": "Street", "meeting_key": 1230},
+        {"meeting_name": "Australian Grand Prix", "date_start": "2024-03-24", "circuit_short_name": "Melbourne", "circuit_type": "Street", "meeting_key": 1231},
+        {"meeting_name": "Japanese Grand Prix", "date_start": "2024-04-07", "circuit_short_name": "Suzuka", "circuit_type": "Permanent", "meeting_key": 1232},
+        {"meeting_name": "Chinese Grand Prix", "date_start": "2024-04-21", "circuit_short_name": "Shanghai", "circuit_type": "Permanent", "meeting_key": 1233},
+        {"meeting_name": "Miami Grand Prix", "date_start": "2024-05-05", "circuit_short_name": "Miami", "circuit_type": "Street", "meeting_key": 1234},
+        {"meeting_name": "Emilia Romagna Grand Prix", "date_start": "2024-05-19", "circuit_short_name": "Imola", "circuit_type": "Permanent", "meeting_key": 1235},
+        {"meeting_name": "Monaco Grand Prix", "date_start": "2024-05-26", "circuit_short_name": "Monaco", "circuit_type": "Street", "meeting_key": 1236},
+        {"meeting_name": "Canadian Grand Prix", "date_start": "2024-06-09", "circuit_short_name": "Montreal", "circuit_type": "Street", "meeting_key": 1237},
+        {"meeting_name": "Spanish Grand Prix", "date_start": "2024-06-23", "circuit_short_name": "Catalunya", "circuit_type": "Permanent", "meeting_key": 1238},
+        {"meeting_name": "Austrian Grand Prix", "date_start": "2024-06-30", "circuit_short_name": "Spielberg", "circuit_type": "Permanent", "meeting_key": 1239},
+        {"meeting_name": "British Grand Prix", "date_start": "2024-07-07", "circuit_short_name": "Silverstone", "circuit_type": "Permanent", "meeting_key": 1240},
+        {"meeting_name": "Hungarian Grand Prix", "date_start": "2024-07-21", "circuit_short_name": "Budapest", "circuit_type": "Permanent", "meeting_key": 1241},
+        {"meeting_name": "Belgian Grand Prix", "date_start": "2024-07-28", "circuit_short_name": "Spa-Francorchamps", "circuit_type": "Permanent", "meeting_key": 1242},
+        {"meeting_name": "Dutch Grand Prix", "date_start": "2024-08-25", "circuit_short_name": "Zandvoort", "circuit_type": "Permanent", "meeting_key": 1243},
+        {"meeting_name": "Italian Grand Prix", "date_start": "2024-09-01", "circuit_short_name": "Monza", "circuit_type": "Permanent", "meeting_key": 1244},
+        {"meeting_name": "Azerbaijan Grand Prix", "date_start": "2024-09-15", "circuit_short_name": "Baku", "circuit_type": "Street", "meeting_key": 1245},
+        {"meeting_name": "Singapore Grand Prix", "date_start": "2024-09-22", "circuit_short_name": "Singapore", "circuit_type": "Street", "meeting_key": 1246},
+        {"meeting_name": "United States Grand Prix", "date_start": "2024-10-20", "circuit_short_name": "Austin", "circuit_type": "Permanent", "meeting_key": 1247},
+        {"meeting_name": "Mexico City Grand Prix", "date_start": "2024-10-27", "circuit_short_name": "Mexico City", "circuit_type": "Permanent", "meeting_key": 1248},
+        {"meeting_name": "São Paulo Grand Prix", "date_start": "2024-11-03", "circuit_short_name": "Interlagos", "circuit_type": "Permanent", "meeting_key": 1249},
+        {"meeting_name": "Las Vegas Grand Prix", "date_start": "2024-11-23", "circuit_short_name": "Las Vegas", "circuit_type": "Street", "meeting_key": 1250},
+        {"meeting_name": "Qatar Grand Prix", "date_start": "2024-12-01", "circuit_short_name": "Lusail", "circuit_type": "Permanent", "meeting_key": 1251},
+        {"meeting_name": "Abu Dhabi Grand Prix", "date_start": "2024-12-08", "circuit_short_name": "Yas Marina", "circuit_type": "Permanent", "meeting_key": 1252}
+    ]
     try:
+        year = datetime.now().year
         r = requests.get(
             "https://api.openf1.org/v1/meetings",
-            params={"year": datetime.now().year},
+            params={"year": year},
             timeout=10
         )
         data = r.json()
-        return sorted(
-            [m for m in data if not m.get("is_cancelled", False)],
-            key=lambda x: x.get("date_start", "")
-        )
+        
+        if not data or not isinstance(data, list):
+            r = requests.get(
+                "https://api.openf1.org/v1/meetings",
+                params={"year": year - 1},
+                timeout=10
+            )
+            data = r.json()
+
+        if isinstance(data, list) and data:
+            return sorted(
+                [m for m in data if isinstance(m, dict) and not m.get("is_cancelled", False)],
+                key=lambda x: x.get("date_start", "")
+            )
+        return fallback
     except Exception:
-        return []
+        return fallback
 
 @st.cache_data(ttl=1800)
 def fetch_current_drivers(session_key="latest"):
@@ -359,7 +397,10 @@ def fetch_current_drivers(session_key="latest"):
             params={"session_key": session_key},
             timeout=10
         )
-        return r.json()
+        data = r.json()
+        if isinstance(data, list):
+            return data
+        return []
     except Exception:
         return []
 
@@ -377,13 +418,15 @@ def fetch_latest_championship():
         )
         data = r.json()
         result = {}
-        for row in data:
-            dn = row.get("driver_number")
-            if dn:
-                result[dn] = {
-                    "points":   row.get("points_current", row.get("points_start", 0)),
-                    "position": row.get("position_current", row.get("position_start", 10)),
-                }
+        if isinstance(data, list):
+            for row in data:
+                if isinstance(row, dict):
+                    dn = row.get("driver_number")
+                    if dn:
+                        result[dn] = {
+                            "points":   row.get("points_current", row.get("points_start", 0)),
+                            "position": row.get("position_current", row.get("position_start", 10)),
+                        }
         return result
     except Exception:
         return {}
@@ -402,9 +445,10 @@ def fetch_latest_stints_for_circuit(circuit_meeting_key):
             timeout=10
         )
         sessions = r.json()
-        if not sessions:
+        if not sessions or not isinstance(sessions, list):
             return {}
-        sk = sessions[0]["session_key"]
+        sk = sessions[0].get("session_key") if isinstance(sessions[0], dict) else None
+        if not sk: return {}
 
         r2 = requests.get(
             "https://api.openf1.org/v1/stints",
@@ -412,7 +456,7 @@ def fetch_latest_stints_for_circuit(circuit_meeting_key):
             timeout=10
         )
         stints = r2.json()
-        if not stints:
+        if not stints or not isinstance(stints, list):
             return {}
 
         df = pd.DataFrame(stints)
@@ -438,13 +482,14 @@ def fetch_latest_pit_efficiency(circuit_meeting_key):
             timeout=10
         )
         sessions = r.json()
-        if not sessions:
+        if not sessions or not isinstance(sessions, list):
             return {}
-        sk = sessions[0]["session_key"]
+        sk = sessions[0].get("session_key") if isinstance(sessions[0], dict) else None
+        if not sk: return {}
 
         r2 = requests.get("https://api.openf1.org/v1/pit", params={"session_key": sk}, timeout=10)
         pits = r2.json()
-        if not pits:
+        if not pits or not isinstance(pits, list):
             return {}
 
         df = pd.DataFrame(pits)
@@ -472,7 +517,7 @@ def fetch_race_control_sc_history(circuit_short_name):
             timeout=10
         )
         data = r.json()
-        if not data:
+        if not data or not isinstance(data, list):
             return 0.35  # F1 historical average ~35% SC per race
 
         df = pd.DataFrame(data)
@@ -865,10 +910,11 @@ if page == "Race Predictor":
             raw_drivers = fetch_current_drivers("latest") or FALLBACK_DRIVERS
 
         seen, unique_drivers = set(), []
-        for d in raw_drivers:
-            if d.get("driver_number") not in seen:
-                seen.add(d.get("driver_number"))
-                unique_drivers.append(d)
+        if isinstance(raw_drivers, list):
+            for d in raw_drivers:
+                if isinstance(d, dict) and d.get("driver_number") not in seen:
+                    seen.add(d.get("driver_number"))
+                    unique_drivers.append(d)
         unique_drivers = unique_drivers[:20]
 
         # ── Priors from training data ──────────────────────
