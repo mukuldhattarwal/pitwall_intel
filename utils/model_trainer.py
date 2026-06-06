@@ -21,10 +21,6 @@ PROCESSED_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data",
 FEATURE_COLS = [
     "grid_position",
     "quali_delta_to_pole",
-    "total_stints",
-    "avg_tyre_age",
-    "num_pit_stops",
-    "avg_stop_duration",
     "air_temperature",
     "track_temperature",
     "humidity",
@@ -36,7 +32,6 @@ FEATURE_COLS = [
     "driver_form_3",
     "circuit_specialist_score",
     "circuit_type_enc",
-    "compound_enc",
 ]
 
 TARGET_COL = "finish_position"
