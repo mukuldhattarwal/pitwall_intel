@@ -1193,11 +1193,7 @@ if page == "Race Predictor":
                         if tele_active and not pd.isna(row.get("quali_gap_ms", np.nan)):
                             qg  = row.get("quali_gap_ms", 0)
                             lc_ = row.get("lap_consistency", 0)
-                            tele_html = f"""
-                            <div style="margin-top:10px;padding-top:8px;border-top:1px solid #222;
-                            font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:rgba(245,245,245,0.35)">
-                            QUALI GAP: {qg:+.0f}ms &nbsp;·&nbsp; CONSISTENCY: {lc_:.0f}ms σ
-                            </div>"""
+                            tele_html = f'<div style="margin-top:10px;padding-top:8px;border-top:1px solid #222;font-family:\'Share Tech Mono\',monospace;font-size:0.62rem;color:rgba(245,245,245,0.35)">QUALI GAP: {qg:+.0f}ms &nbsp;·&nbsp; CONSISTENCY: {lc_:.0f}ms σ</div>'
                         st.markdown(f"""
                         <div class="pw-card" style="border-top:3px solid {tc};text-align:center;padding:1.4rem 1rem">
                             <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:rgba(245,245,245,0.35);letter-spacing:0.12em;margin-bottom:6px">P{medal}</div>
