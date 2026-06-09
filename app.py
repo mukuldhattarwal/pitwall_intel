@@ -21,12 +21,21 @@ BASE_DIR   = os.path.dirname(__file__)
 MODEL_DIR  = os.path.join(BASE_DIR, "models")
 PROC_DIR   = os.path.join(BASE_DIR, "data", "processed")
 
+_page_icon = "🏎"
+try:
+    from PIL import Image
+    _logo_path = os.path.join(BASE_DIR, "assets", "f1_logo.png")
+    if os.path.exists(_logo_path):
+        _page_icon = Image.open(_logo_path)
+except Exception:
+    pass
+
 # ─────────────────────────────────────────────────────────────
 # PAGE CONFIG
 # ─────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="PitWall Intel",
-    page_icon="🏎",
+    page_icon=_page_icon,
     layout="wide",
     initial_sidebar_state="expanded",
 )

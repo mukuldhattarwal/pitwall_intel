@@ -15,10 +15,19 @@ import os
 import time
 from datetime import datetime
 
+_page_icon = "🏎️"
+try:
+    from PIL import Image
+    _logo_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "assets", "f1_logo.png")
+    if os.path.exists(_logo_path):
+        _page_icon = Image.open(_logo_path)
+except Exception:
+    pass
+
 # ── Page config ──────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="PitWall Intel",
-    page_icon="🏎️",
+    page_icon=_page_icon,
     layout="wide",
     initial_sidebar_state="expanded",
 )
