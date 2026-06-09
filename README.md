@@ -5,13 +5,15 @@
 
 
 
-> **DATA DRIVEN &nbsp;·&nbsp; RACE READY &nbsp;·&nbsp; POWERED BY OPENF1**
+> **DATA DRIVEN &nbsp;·&nbsp; RACE READY &nbsp;·&nbsp; POWERED BY OPENF1 + FASTF1**
 
 <br/>
 
 [![Live App](https://img.shields.io/badge/▶%20LIVE%20APP-pitwall--intel.streamlit.app-E8002D?style=for-the-badge&labelColor=0a0a0a)](https://pitwall-intel.streamlit.app/)
 &nbsp;
 [![OpenF1](https://img.shields.io/badge/DATA-OPENF1.ORG-FFCD00?style=for-the-badge&labelColor=0a0a0a)](https://openf1.org/)
+&nbsp;
+[![FastF1](https://img.shields.io/badge/TELEMETRY-FASTF1-2AFF7A?style=for-the-badge&labelColor=0a0a0a)](https://docs.fastf1.dev/)
 &nbsp;
 [![Python](https://img.shields.io/badge/PYTHON-3.10+-3776AB?style=for-the-badge&labelColor=0a0a0a&logo=python&logoColor=white)](https://python.org/)
 &nbsp;
@@ -28,7 +30,7 @@
 
 ## WHAT IS THIS
 
-**PitWall Intel** is an F1 race result predictor that thinks like a race engineer. It pulls 3 seasons of real Formula 1 data from the OpenF1 API, engineers predictive features from qualifying pace, tyre strategy, championship pressure, and weather — then runs an XGBoost model to predict the full race finishing order before lights out.
+**PitWall Intel** is an F1 race result predictor that thinks like a race engineer. It pulls 3 seasons of real Formula 1 data from the OpenF1 API, enriches it with deep lap-by-lap telemetry from FastF1 (lap consistency, tyre degradation, sector deltas), engineers predictive features from qualifying pace, tyre strategy, championship pressure, and weather — then runs an XGBoost model to predict the full race finishing order before lights out.
 
 Built for intermediate data science students who want a real project with real data and results worth showing off.
 
@@ -135,7 +137,9 @@ Opens at **http://localhost:8501**
    ├─ Trains XGBoost + Random Forest
    └─ Saves models to /models/
    ↓
-4  Go to Race Predictor → select a GP → Run Prediction
+4  (Optional) Click "Fetch Telemetry (FastF1)" to add deep telemetry features, then click "Fetch + Train" again to update the model.
+   ↓
+5  Go to Race Predictor → select a GP → Run Prediction
 ```
 
 <br/>
