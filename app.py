@@ -1817,17 +1817,14 @@ elif page == "What-If Simulator":
 
         # Show which driver acronym is selected safely
         _driver_display = driver_name if "driver_name" in dir() else "DRV"
+        tele_str = '&nbsp;·&nbsp; <span style="color:#2aff7a">TELE ACTIVE</span>' if tele_active else ''
 
         st.markdown(f"""
         <div class="pw-card pw-card-accent" style="text-align:center;padding:2rem">
             <div class="pw-section-label" style="text-align:center">{_driver_display} — Predicted Outcome</div>
-            <div style="font-family:'Barlow Condensed',sans-serif;font-size:5rem;font-weight:800;letter-spacing:0.04em;color:{pos_color};line-height:1">
-            P{pred_pos:02d}</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:5rem;font-weight:800;letter-spacing:0.04em;color:{pos_color};line-height:1">P{pred_pos:02d}</div>
             <div style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:rgba(245,245,245,0.4);margin-top:8px">
-            STARTED P{_grid_pos:02d} &nbsp;·&nbsp; <span style="color:{pos_color}">{delta_str} POSITIONS</span>
-            &nbsp;·&nbsp; SC PROB {_sc_prob_wi * 100:.0f}%
-            &nbsp;·&nbsp; {_compound_wi}
-            {'&nbsp;·&nbsp; <span style="color:#2aff7a">TELE ACTIVE</span>' if tele_active else ''}
+                STARTED P{_grid_pos:02d} &nbsp;·&nbsp; <span style="color:{pos_color}">{delta_str} POSITIONS</span> &nbsp;·&nbsp; SC PROB {_sc_prob_wi * 100:.0f}% &nbsp;·&nbsp; {_compound_wi} {tele_str}
             </div>
         </div>
         """, unsafe_allow_html=True)
