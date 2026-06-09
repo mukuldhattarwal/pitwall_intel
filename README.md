@@ -8,7 +8,7 @@
 
 ### F1 Race Result Predictor
 
-> **DATA DRIVEN &nbsp;·&nbsp; RACE READY &nbsp;·&nbsp; POWERED BY OPENF1 + FASTF1**
+**DATA DRIVEN &nbsp;·&nbsp; RACE READY &nbsp;·&nbsp; POWERED BY OPENF1 + FASTF1**
 
 <br/>
 
