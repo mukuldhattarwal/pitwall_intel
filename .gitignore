@@ -1,42 +1,28 @@
-# Python bytecode and caches
-__pycache__/
-*.py[cod]
-*$py.class
-
-# Virtual environments
+# Virtual Environments
 .venv/
 venv/
 env/
-ENV/
-
-# Distribution / packaging
-build/
-dist/
-*.egg-info/
-.eggs/
-
-# Test and coverage artifacts
-.pytest_cache/
-.coverage
-.coverage.*
-htmlcov/
-.mypy_cache/
-.ruff_cache/
-
-# Jupyter checkpoints
-.ipynb_checkpoints/
-
-# Environment and local secrets
 .env
-.env.*
-!.env.example
-.streamlit/secrets.toml
 
-# OS/editor files
+# Python Caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Data (Raw API responses & Processed features)
+data/raw/*.csv
+data/processed/*.csv
+
+# Trained Models & Metrics
+models/*.pkl
+models/*.json
+
+# FastF1 Cache
+fastf1_cache/
+ff1_cache/
+
+# OS Files
 .DS_Store
 Thumbs.db
-.vscode/
-.idea/
-
-# Logs
-*.log

@@ -143,12 +143,14 @@ hr { border-color: var(--carbon-line) !important; margin: 1rem 0 !important; }
 .pw-card { background: var(--carbon-card); border: 1px solid var(--carbon-border); border-top: 2px solid var(--carbon-line); padding: 1.2rem 1.4rem; border-radius: 2px; margin-bottom: 0.8rem; }
 .pw-card-accent { border-top: 2px solid var(--f1-red) !important; }
 .pw-card-yellow { border-top: 2px solid var(--f1-yellow) !important; }
+.pw-card-green  { border-top: 2px solid #2aff7a !important; }
 .status-bar { display:flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:0.68rem; color:rgba(245,245,245,0.45); letter-spacing:0.1em; text-transform:uppercase; padding:0.4rem 0; }
 .status-dot { width:6px; height:6px; border-radius:50%; background:#2aff7a; animation:pulse-dot 2s infinite; }
 @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.3} }
 .telemetry-line { font-family:var(--font-mono); font-size:0.72rem; color:rgba(245,245,245,0.35); letter-spacing:0.06em; padding:0.15rem 0.7rem; border-left:2px solid var(--f1-red); margin-bottom:0.25rem; }
 .what-if-label { font-family:var(--font-mono); font-size:0.68rem; color:var(--f1-yellow); text-transform:uppercase; letter-spacing:0.12em; margin-bottom:6px; }
 .upset-badge { background:rgba(255,205,0,0.15); border:1px solid var(--f1-yellow); color:var(--f1-yellow); font-family:var(--font-mono); font-size:0.6rem; padding:1px 6px; border-radius:1px; letter-spacing:0.1em; text-transform:uppercase; }
+.tele-badge { background:rgba(42,255,122,0.1); border:1px solid #2aff7a; color:#2aff7a; font-family:var(--font-mono); font-size:0.6rem; padding:1px 6px; border-radius:1px; letter-spacing:0.1em; text-transform:uppercase; margin-left:6px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -156,7 +158,6 @@ hr { border-color: var(--carbon-line) !important; margin: 1rem 0 !important; }
 # CONSTANTS
 # ─────────────────────────────────────────────────────────────
 TEAM_COLORS = {
-    # 2026 active teams
     "McLaren":         "#FF8000",
     "Ferrari":         "#E8002D",
     "Red Bull Racing": "#3671C6",
@@ -168,55 +169,37 @@ TEAM_COLORS = {
     "Racing Bulls":    "#6692FF",
     "Audi":            "#BB0A1E",
     "Cadillac":        "#CC0000",
-    # Historic teams kept for training-data colour lookups only
     "Sauber":          "#52E252",
     "Kick Sauber":     "#52E252",
     "AlphaTauri":      "#5E8FAA",
     "RB":              "#6692FF",
 }
 
-# ── 2026 F1 GRID — 22 drivers, 11 constructors ──────────────
-# Order matches your specified acronym sequence:
-# NOR, GAS, LEC, LAW, HAM, VER, PER, STR, OCO, SAI,
-# BOR, ANT, ALB, LIN, RUS, HAD, ALO, HUL, COL, BOT
-# + BEA (Haas #2) to complete 22 entries.
 FALLBACK_DRIVERS = [
-    # McLaren
     {"driver_number": 4,  "name_acronym": "NOR", "full_name": "Lando Norris",       "team_name": "McLaren"},
     {"driver_number": 81, "name_acronym": "PIA", "full_name": "Oscar Piastri",      "team_name": "McLaren"},
-    # Ferrari
     {"driver_number": 44, "name_acronym": "HAM", "full_name": "Lewis Hamilton",     "team_name": "Ferrari"},
     {"driver_number": 16, "name_acronym": "LEC", "full_name": "Charles Leclerc",    "team_name": "Ferrari"},
-    # Red Bull Racing
     {"driver_number": 1,  "name_acronym": "VER", "full_name": "Max Verstappen",     "team_name": "Red Bull Racing"},
     {"driver_number": 6,  "name_acronym": "HAD", "full_name": "Isack Hadjar",       "team_name": "Red Bull Racing"},
-    # Mercedes
     {"driver_number": 63, "name_acronym": "RUS", "full_name": "George Russell",     "team_name": "Mercedes"},
     {"driver_number": 12, "name_acronym": "ANT", "full_name": "Kimi Antonelli",     "team_name": "Mercedes"},
-    # Williams
     {"driver_number": 23, "name_acronym": "ALB", "full_name": "Alexander Albon",    "team_name": "Williams"},
     {"driver_number": 55, "name_acronym": "SAI", "full_name": "Carlos Sainz",       "team_name": "Williams"},
-    # Aston Martin
     {"driver_number": 14, "name_acronym": "ALO", "full_name": "Fernando Alonso",    "team_name": "Aston Martin"},
     {"driver_number": 18, "name_acronym": "STR", "full_name": "Lance Stroll",       "team_name": "Aston Martin"},
-    # Alpine
     {"driver_number": 10, "name_acronym": "GAS", "full_name": "Pierre Gasly",       "team_name": "Alpine"},
     {"driver_number": 45, "name_acronym": "COL", "full_name": "Franco Colapinto",   "team_name": "Alpine"},
-    # Haas F1 Team
     {"driver_number": 50, "name_acronym": "OCO", "full_name": "Esteban Ocon",       "team_name": "Haas F1 Team"},
     {"driver_number": 87, "name_acronym": "BEA", "full_name": "Oliver Bearman",     "team_name": "Haas F1 Team"},
-    # Racing Bulls
     {"driver_number": 30, "name_acronym": "LAW", "full_name": "Liam Lawson",        "team_name": "Racing Bulls"},
     {"driver_number": 40, "name_acronym": "LIN", "full_name": "Arvid Lindblad",     "team_name": "Racing Bulls"},
-    # Audi (formerly Sauber/Kick Sauber)
     {"driver_number": 5,  "name_acronym": "HUL", "full_name": "Nico Hulkenberg",    "team_name": "Audi"},
     {"driver_number": 27, "name_acronym": "BOR", "full_name": "Gabriel Bortoleto",  "team_name": "Audi"},
-    # Cadillac (11th constructor)
     {"driver_number": 11, "name_acronym": "PER", "full_name": "Sergio Perez",       "team_name": "Cadillac"},
     {"driver_number": 77, "name_acronym": "BOT", "full_name": "Valtteri Bottas",    "team_name": "Cadillac"},
 ]
 
-# Full feature set used by the model
 FEATURE_COLS = [
     "grid_position",
     "quali_delta_to_pole",
@@ -246,110 +229,18 @@ FEATURE_COLS = [
     "circuit_type_enc",
     "is_street_circuit",
     "sc_probability",
+    # ── FastF1 telemetry features ──────────────────────────
+    "quali_gap_ms",
+    "s1_delta",
+    "s2_delta",
+    "s3_delta",
+    "lap_consistency",
+    "race_pace_delta",
+    "tyre_deg_rate",
+    "throttle_pct",
+    "sc_laps_actual",
 ]
 
-# ─────────────────────────────────────────────────────────────
-# HELPERS
-# ─────────────────────────────────────────────────────────────
-def get_team_color(team_name: str) -> str:
-    """Return hex colour for a team name, with case-insensitive partial match."""
-    name_lower = str(team_name).lower()
-    for k, v in TEAM_COLORS.items():
-        if k.lower() in name_lower:
-            return v
-    return "#555555"
-
-
-def confidence_score(predicted_pos: int, grid_pos: int) -> float:
-    return round(max(0.3, 1.0 - (abs(predicted_pos - grid_pos) * 0.05)), 2)
-
-# ─────────────────────────────────────────────────────────────
-# CACHED LOADERS
-# ─────────────────────────────────────────────────────────────
-@st.cache_data(ttl=3600)
-def load_model_artifacts():
-    xgb_path  = os.path.join(MODEL_DIR, "xgboost_model.pkl")
-    meta_path = os.path.join(MODEL_DIR, "model_meta.pkl")
-    if not os.path.exists(xgb_path):
-        return None, None
-    model = joblib.load(xgb_path)
-    meta  = joblib.load(meta_path) if os.path.exists(meta_path) else {}
-    return model, meta
-
-
-@st.cache_data(ttl=3600)
-def load_features_df():
-    path = os.path.join(PROC_DIR, "features_final.csv")
-    if not os.path.exists(path):
-        return None
-    return pd.read_csv(path)
-
-
-@st.cache_data(ttl=3600)
-def load_prediction_priors():
-    """
-    Extract the most recent known values for every driver and team
-    from the training dataset so predictions are grounded in real data
-    rather than placeholder defaults.
-    Returns: (driver_lookup dict, team_lookup dict, circuit_lookup dict)
-    """
-    df = load_features_df()
-    if df is None:
-        return {}, {}, {}
-
-    sort_cols = [c for c in ["year", "date_start", "session_key"] if c in df.columns]
-    ordered   = df.sort_values(sort_cols) if sort_cols else df
-
-    # ── Driver-level priors ───────────────────────────────
-    driver_prior_cols = [c for c in [
-        "driver_number", "team_name",
-        "champ_points_before", "champ_position_before",
-        "team_dnf_rate", "driver_form_3", "driver_form_5",
-        "circuit_specialist_score", "dnf_rate_driver",
-        "constructor_avg_finish", "pit_stop_efficiency",
-        "points_gap_to_leader", "seasons_experience",
-        "total_stints", "avg_tyre_age", "num_pit_stops",
-        "avg_stop_duration",
-    ] if c in ordered.columns]
-
-    driver_lookup = {}
-    if "driver_number" in driver_prior_cols:
-        latest = (
-            ordered[driver_prior_cols]
-            .dropna(subset=["driver_number"])
-            .drop_duplicates("driver_number", keep="last")
-        )
-        driver_lookup = latest.set_index("driver_number").to_dict(orient="index")
-
-    # ── Team-level priors ─────────────────────────────────
-    team_prior_cols = [c for c in [
-        "team_name", "team_dnf_rate",
-        "constructor_avg_finish", "pit_stop_efficiency",
-    ] if c in ordered.columns]
-
-    team_lookup = {}
-    if "team_name" in team_prior_cols:
-        t_latest = (
-            ordered[team_prior_cols]
-            .dropna(subset=["team_name"])
-            .drop_duplicates("team_name", keep="last")
-        )
-        team_lookup = t_latest.set_index("team_name").to_dict(orient="index")
-
-    # ── Circuit-level priors (safety car probability) ─────
-    circuit_lookup = {}
-    if "circuit_short_name" in ordered.columns and "sc_probability" in ordered.columns:
-        c_latest = (
-            ordered[["circuit_short_name", "sc_probability"]]
-            .dropna()
-            .drop_duplicates("circuit_short_name", keep="last")
-        )
-        circuit_lookup = c_latest.set_index("circuit_short_name")["sc_probability"].to_dict()
-
-    return driver_lookup, team_lookup, circuit_lookup
-
-
-# ── Full 2026 F1 calendar — 24 rounds ────────────────────────
 F1_2026_CALENDAR = [
     {"meeting_key": 1280, "meeting_name": "Australian Grand Prix",    "date_start": "2026-03-06", "circuit_short_name": "Melbourne",        "circuit_type": "Permanent",          "country_name": "Australia"},
     {"meeting_key": 1281, "meeting_name": "Chinese Grand Prix",       "date_start": "2026-03-13", "circuit_short_name": "Shanghai",          "circuit_type": "Permanent",          "country_name": "China"},
@@ -378,14 +269,109 @@ F1_2026_CALENDAR = [
 ]
 
 
+# ─────────────────────────────────────────────────────────────
+# HELPERS
+# ─────────────────────────────────────────────────────────────
+def get_team_color(team_name: str) -> str:
+    name_lower = str(team_name).lower()
+    for k, v in TEAM_COLORS.items():
+        if k.lower() in name_lower:
+            return v
+    return "#555555"
+
+
+def confidence_score(predicted_pos: int, grid_pos: int) -> float:
+    return round(max(0.3, 1.0 - (abs(predicted_pos - grid_pos) * 0.05)), 2)
+
+
+def has_telemetry_features(df: pd.DataFrame) -> bool:
+    tele_cols = ["quali_gap_ms", "lap_consistency", "tyre_deg_rate"]
+    return all(c in df.columns for c in tele_cols) and df["quali_gap_ms"].notna().any()
+
+
+# ─────────────────────────────────────────────────────────────
+# CACHED LOADERS
+# ─────────────────────────────────────────────────────────────
+@st.cache_data(ttl=3600)
+def load_model_artifacts():
+    xgb_path  = os.path.join(MODEL_DIR, "xgboost_model.pkl")
+    meta_path = os.path.join(MODEL_DIR, "model_meta.pkl")
+    if not os.path.exists(xgb_path):
+        return None, None
+    model = joblib.load(xgb_path)
+    meta  = joblib.load(meta_path) if os.path.exists(meta_path) else {}
+    return model, meta
+
+
+@st.cache_data(ttl=3600)
+def load_features_df():
+    path = os.path.join(PROC_DIR, "features_final.csv")
+    if not os.path.exists(path):
+        return None
+    return pd.read_csv(path)
+
+
+@st.cache_data(ttl=3600)
+def load_prediction_priors():
+    df = load_features_df()
+    if df is None:
+        return {}, {}, {}
+
+    sort_cols = [c for c in ["year", "date_start", "session_key"] if c in df.columns]
+    ordered   = df.sort_values(sort_cols) if sort_cols else df
+
+    driver_prior_cols = [c for c in [
+        "driver_number", "team_name",
+        "champ_points_before", "champ_position_before",
+        "team_dnf_rate", "driver_form_3", "driver_form_5",
+        "circuit_specialist_score", "dnf_rate_driver",
+        "constructor_avg_finish", "pit_stop_efficiency",
+        "points_gap_to_leader", "seasons_experience",
+        "total_stints", "avg_tyre_age", "num_pit_stops",
+        "avg_stop_duration",
+        # FastF1 priors
+        "quali_gap_ms", "s1_delta", "s2_delta", "s3_delta",
+        "lap_consistency", "race_pace_delta", "tyre_deg_rate",
+        "throttle_pct", "sc_laps_actual",
+    ] if c in ordered.columns]
+
+    driver_lookup = {}
+    if "driver_number" in driver_prior_cols:
+        latest = (
+            ordered[driver_prior_cols]
+            .dropna(subset=["driver_number"])
+            .drop_duplicates("driver_number", keep="last")
+        )
+        driver_lookup = latest.set_index("driver_number").to_dict(orient="index")
+
+    team_prior_cols = [c for c in [
+        "team_name", "team_dnf_rate",
+        "constructor_avg_finish", "pit_stop_efficiency",
+    ] if c in ordered.columns]
+
+    team_lookup = {}
+    if "team_name" in team_prior_cols:
+        t_latest = (
+            ordered[team_prior_cols]
+            .dropna(subset=["team_name"])
+            .drop_duplicates("team_name", keep="last")
+        )
+        team_lookup = t_latest.set_index("team_name").to_dict(orient="index")
+
+    circuit_lookup = {}
+    if "circuit_short_name" in ordered.columns and "sc_probability" in ordered.columns:
+        c_latest = (
+            ordered[["circuit_short_name", "sc_probability"]]
+            .dropna()
+            .drop_duplicates("circuit_short_name", keep="last")
+        )
+        circuit_lookup = c_latest.set_index("circuit_short_name")["sc_probability"].to_dict()
+
+    return driver_lookup, team_lookup, circuit_lookup
+
+
 @st.cache_data(ttl=1800)
 def fetch_upcoming_races():
-    """
-    Returns the full 2026 F1 race calendar.
-    Tries the OpenF1 API first — uses it only if it returns >= 10 meetings.
-    Always falls back to F1_2026_CALENDAR so all 24 races appear in the
-    Grand Prix selector even when the API is unavailable or rate-limited.
-    """
     try:
         for year in [datetime.now().year, datetime.now().year + 1]:
             r = requests.get(
@@ -409,10 +395,6 @@ def fetch_upcoming_races():
 
 @st.cache_data(ttl=1800)
 def fetch_current_drivers(session_key="latest"):
-    """
-    Fetch driver list from OpenF1 API.
-    Returns a list of dicts or an empty list on failure.
-    """
     try:
         r = requests.get(
             "https://api.openf1.org/v1/drivers",
@@ -430,12 +412,6 @@ def fetch_current_drivers(session_key="latest"):
 
 @st.cache_data(ttl=1800)
 def fetch_latest_championship():
-    """
-    Fetch championship standings by first finding the most recent completed
-    race session_key, then querying championship_drivers with that key.
-    The championship endpoint does NOT support session_key=latest.
-    Falls back gracefully to empty dict if API is unavailable.
-    """
     try:
         for year in [datetime.now().year, datetime.now().year - 1]:
             r = requests.get(
@@ -487,7 +463,6 @@ def fetch_latest_championship():
 
 @st.cache_data(ttl=1800)
 def fetch_latest_stints_for_circuit(circuit_meeting_key):
-    """Fetch most recent race stints for the chosen circuit meeting."""
     try:
         r = requests.get(
             "https://api.openf1.org/v1/sessions",
@@ -531,7 +506,6 @@ def fetch_latest_stints_for_circuit(circuit_meeting_key):
 
 @st.cache_data(ttl=1800)
 def fetch_latest_pit_efficiency(circuit_meeting_key):
-    """Fetch pit stop data for most recent race at the circuit."""
     try:
         r = requests.get(
             "https://api.openf1.org/v1/sessions",
@@ -573,10 +547,6 @@ def fetch_latest_pit_efficiency(circuit_meeting_key):
 
 @st.cache_data(ttl=1800)
 def fetch_race_control_sc_history(circuit_short_name):
-    """
-    Estimate safety car probability for a circuit from recent race control data.
-    Returns a float 0.0 – 1.0.
-    """
     try:
         r = requests.get(
             "https://api.openf1.org/v1/race_control",
@@ -617,13 +587,6 @@ def build_race_input(
     stint_data,
     pit_data,
 ):
-    """
-    Build a feature-complete DataFrame — one row per driver — for the model.
-    Priority order for every feature:
-        1. Live API data for this specific race/circuit
-        2. Historical priors from training dataset
-        3. Sensible F1 domain-knowledge defaults
-    """
     def pick(*values, default):
         for v in values:
             try:
@@ -696,6 +659,16 @@ def build_race_input(
             "is_street_circuit":      1 if circuit_type_enc == 1 else 0,
             # ── Safety car ─────────────────────────────────
             "sc_probability":         float(sc_probability),
+            # ── FastF1 telemetry priors ────────────────────
+            "quali_gap_ms":           pick(dp.get("quali_gap_ms"),       default=(grid - 1) * 80.0),
+            "s1_delta":               pick(dp.get("s1_delta"),           default=(grid - 1) * 25.0),
+            "s2_delta":               pick(dp.get("s2_delta"),           default=(grid - 1) * 28.0),
+            "s3_delta":               pick(dp.get("s3_delta"),           default=(grid - 1) * 27.0),
+            "lap_consistency":        pick(dp.get("lap_consistency"),    default=350.0),
+            "race_pace_delta":        pick(dp.get("race_pace_delta"),    default=(grid - 1) * 120.0),
+            "tyre_deg_rate":          pick(dp.get("tyre_deg_rate"),      default=15.0),
+            "throttle_pct":           pick(dp.get("throttle_pct"),       default=72.0),
+            "sc_laps_actual":         pick(dp.get("sc_laps_actual"),     default=3.0),
             # ── Identity (not fed to model) ────────────────
             "driver_number":          dn,
             "name_acronym":           d.get("name_acronym", "UNK"),
@@ -707,17 +680,6 @@ def build_race_input(
 
 
 def run_prediction(model, feature_cols, race_df):
-    """
-    Run model prediction with two-step bias correction.
-
-    Step 1 — Score spread normalisation:
-        Rescale raw scores so best driver maps to ~1.0 and worst to ~20.0.
-
-    Step 2 — Dominance snap:
-        If pole sitter inputs signal clear dominance, snap score to
-        guarantee P1 rather than rounding to P2.
-    """
-    # Ensure every expected feature column is present
     for c in feature_cols:
         if c not in race_df.columns:
             race_df[c] = 0.0
@@ -725,12 +687,10 @@ def run_prediction(model, feature_cols, race_df):
     X      = race_df[feature_cols].fillna(0).values.astype(float)
     scores = model.predict(X).astype(float)
 
-    # Step 1: spread normalisation
     s_min, s_max = scores.min(), scores.max()
     if s_max > s_min:
         scores = 1.0 + (scores - s_min) / (s_max - s_min) * 19.0
 
-    # Step 2: dominance snap
     if "grid_position" in race_df.columns:
         pole_mask = race_df["grid_position"].values == 1
         if pole_mask.any():
@@ -771,19 +731,29 @@ with col_title:
     st.markdown("""
     <div style="padding-top:2px">
         <div class="pw-title">PITWALL <span>INTEL</span></div>
-        <div class="pw-subtitle">Data Driven &nbsp;·&nbsp; Race Ready &nbsp;·&nbsp; Powered by OpenF1</div>
+        <div class="pw-subtitle">Data Driven &nbsp;·&nbsp; Race Ready &nbsp;·&nbsp; Powered by OpenF1 + FastF1</div>
     </div>
     """, unsafe_allow_html=True)
 
 model_exists   = os.path.exists(os.path.join(MODEL_DIR, "xgboost_model.pkl"))
 features_exist = os.path.exists(os.path.join(PROC_DIR,  "features_final.csv"))
 
+# Check if telemetry features are present
+tele_active = False
+if features_exist:
+    try:
+        _df_check = pd.read_csv(os.path.join(PROC_DIR, "features_final.csv"), nrows=5)
+        tele_active = has_telemetry_features(_df_check)
+    except Exception:
+        pass
+
 st.markdown(f"""
 <div class="status-bar">
     <span class="status-dot"></span>
     SYSTEM ONLINE &nbsp;·&nbsp; OPENF1 API CONNECTED &nbsp;·&nbsp;
     DATA {'READY' if features_exist else 'NOT FETCHED'} &nbsp;·&nbsp;
-    MODEL {'READY' if model_exists else 'NOT TRAINED'}
+    MODEL {'READY' if model_exists else 'NOT TRAINED'} &nbsp;·&nbsp;
+    TELEMETRY {'ACTIVE' if tele_active else 'NOT FETCHED'}
 </div><hr/>
 """, unsafe_allow_html=True)
 
@@ -812,10 +782,14 @@ with st.sidebar:
     if st.button("Fetch + Train Model", use_container_width=True):
         st.session_state["run_pipeline"] = True
 
+    if st.button("Fetch Telemetry (FastF1)", use_container_width=True):
+        st.session_state["run_fastf1"] = True
+
     st.markdown(f"""
     <div style="margin-top:0.8rem">
         <div class="telemetry-line">DATA &nbsp;{'LOADED' if features_exist else 'NOT FOUND'}</div>
         <div class="telemetry-line">MODEL {'READY' if model_exists else 'NOT TRAINED'}</div>
+        <div class="telemetry-line">TELEMETRY {'ACTIVE' if tele_active else 'NOT FETCHED'}</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -823,15 +797,15 @@ with st.sidebar:
     st.markdown("""
     <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;
     color:rgba(245,245,245,0.3);line-height:1.6;letter-spacing:0.04em">
-    SOURCE &nbsp;: OPENF1.ORG<br>
+    SOURCE &nbsp;: OPENF1.ORG + FASTF1<br>
     SEASONS : 2023 / 2024 / 2025 / 2026<br>
     MODEL &nbsp; : XGBOOST v2.0<br>
-    BUILD &nbsp; : PITWALL INTEL v1.0
+    BUILD &nbsp; : PITWALL INTEL v1.1
     </div>
     """, unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────
-# PIPELINE RUNNER
+# OPENF1 PIPELINE RUNNER
 # ─────────────────────────────────────────────────────────────
 if st.session_state.get("run_pipeline"):
     st.session_state["run_pipeline"] = False
@@ -874,6 +848,53 @@ if st.session_state.get("run_pipeline"):
         st.info("Check your internet connection and try again.")
 
 # ─────────────────────────────────────────────────────────────
+# FASTF1 PIPELINE RUNNER
+# ─────────────────────────────────────────────────────────────
+if st.session_state.get("run_fastf1"):
+    st.session_state["run_fastf1"] = False
+    progress_bar = st.progress(0)
+    status_text  = st.empty()
+
+    try:
+        from utils.fastf1_pipeline import run_fastf1_pipeline
+
+        def _cb(pct, msg):
+            progress_bar.progress(min(pct, 100))
+            status_text.markdown(
+                f'<div class="telemetry-line">{msg}</div>',
+                unsafe_allow_html=True,
+            )
+
+        run_fastf1_pipeline(
+            years=[2023, 2024, 2025, 2026],
+            merge_with_existing=True,
+            save=True,
+            progress_callback=_cb,
+        )
+
+        progress_bar.progress(100)
+        status_text.markdown(
+            '<div class="telemetry-line" style="color:#2aff7a">'
+            'FastF1 telemetry merged. Re-train model to use new features.</div>',
+            unsafe_allow_html=True,
+        )
+        st.success(
+            "Telemetry features added: quali_gap_ms · s1/s2/s3_delta · "
+            "lap_consistency · race_pace_delta · tyre_deg_rate · throttle_pct · sc_laps_actual"
+        )
+        st.info("Now click Fetch + Train Model to retrain with the enriched feature set.")
+        st.cache_data.clear()
+
+    except ImportError as e:
+        st.error(f"**Import Error:** `{e}`")
+        if "fastf1_pipeline" in str(e):
+            st.info("👉 You are missing the `utils/fastf1_pipeline.py` script. Please create it.")
+        else:
+            st.info("👉 Your virtual environment might not be activated correctly. Stop the server and start it using:\n\n`python -m streamlit run app.py`")
+    except Exception as e:
+        st.error(f"FastF1 pipeline error: {e}")
+
+# ─────────────────────────────────────────────────────────────
 # PAGE 1 — RACE PREDICTOR
 # ─────────────────────────────────────────────────────────────
 if page == "Race Predictor":
@@ -899,7 +920,7 @@ if page == "Race Predictor":
             [
                 "Sessions · Results · Grids<br>Stints · Pit Stops · Weather",
                 "Driver Form · Quali Delta<br>SC Probability · Constructor Rate",
-                "XGBoost + Random Forest<br>28 Features · Time-based Split",
+                "XGBoost + Random Forest<br>37 Features · Time-based Split",
             ],
         ):
             accent = "pw-card-accent" if step == "Step 03" else ""
@@ -913,6 +934,17 @@ if page == "Race Predictor":
                 """, unsafe_allow_html=True)
 
     else:
+        # ── Telemetry active banner ────────────────────────
+        if tele_active:
+            st.markdown("""
+            <div class="pw-card pw-card-green" style="padding:0.7rem 1.2rem;margin-bottom:0.8rem">
+                <div style="font-family:'Share Tech Mono',monospace;font-size:0.68rem;color:#2aff7a;letter-spacing:0.1em">
+                FASTF1 TELEMETRY ACTIVE &nbsp;·&nbsp;
+                quali_gap_ms · sector deltas · lap consistency · tyre deg rate · throttle % · SC laps
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
         # ── Race selector ──────────────────────────────────
         st.markdown("<div class='pw-section-label'>Race Setup</div>", unsafe_allow_html=True)
         col_race, col_weather = st.columns([2, 1])
@@ -961,8 +993,7 @@ if page == "Race Predictor":
             sc_prob    = fetch_race_control_sc_history(circuit_name)
             raw_drivers = fetch_current_drivers("latest") or []
 
-        # ── Build unique driver list — always 22 drivers ───
-        # Validate API response: each entry must be a dict with a driver_number.
+        # ── Build unique driver list ───────────────────────
         seen, api_drivers = set(), []
         if isinstance(raw_drivers, list):
             for d in raw_drivers:
@@ -973,18 +1004,14 @@ if page == "Race Predictor":
                     seen.add(dn)
                     api_drivers.append(d)
 
-        # Supplement / replace with FALLBACK_DRIVERS if API returned too few
         if len(api_drivers) < 20:
-            # Use fallback entirely
-            unique_drivers = FALLBACK_DRIVERS  # exactly 22 drivers
+            unique_drivers = FALLBACK_DRIVERS
         else:
-            # Use API drivers but cap at 22
             unique_drivers = api_drivers[:22]
 
         # ── Priors from training data ──────────────────────
         driver_lookup, team_lookup, circuit_lookup = load_prediction_priors()
 
-        # Override sc_prob with circuit-specific historical value if available
         if circuit_name in circuit_lookup:
             sc_prob = circuit_lookup[circuit_name]
 
@@ -1022,7 +1049,6 @@ if page == "Race Predictor":
                     )
                     grid_positions[d["driver_number"]] = pos
 
-        # Default grid: P1–P22 in FALLBACK_DRIVERS order if not customised
         if not grid_positions:
             grid_positions = {d["driver_number"]: i + 1 for i, d in enumerate(unique_drivers)}
 
@@ -1062,8 +1088,8 @@ if page == "Race Predictor":
             </div>
             """, unsafe_allow_html=True)
 
-            tab_grid, tab_gain, tab_podium, tab_upset = st.tabs([
-                "Predicted Grid", "Position Change", "Podium Breakdown", "Upset Alert",
+            tab_grid, tab_gain, tab_podium, tab_upset, tab_tele = st.tabs([
+                "Predicted Grid", "Position Change", "Podium Breakdown", "Upset Alert", "Telemetry Insights",
             ])
 
             # ── TAB 1: GRID ───────────────────────────────
@@ -1085,6 +1111,7 @@ if page == "Race Predictor":
                 .grid-col { width:46px; flex:0 0 46px; text-align:right; font-family:'Share Tech Mono',monospace; font-size:0.68rem; color:rgba(245,245,245,0.65); }
                 .delta { width:52px; flex:0 0 52px; text-align:right; font-family:'Share Tech Mono',monospace; font-size:0.68rem; font-weight:700; }
                 .badge { background:rgba(255,205,0,0.15); border:1px solid #ffcd00; color:#ffcd00; font-family:'Share Tech Mono',monospace; font-size:0.55rem; padding:1px 5px; border-radius:1px; letter-spacing:0.08em; text-transform:uppercase; margin-left:7px; }
+                .tele-tag { background:rgba(42,255,122,0.1); border:1px solid #2aff7a; color:#2aff7a; font-family:'Share Tech Mono',monospace; font-size:0.55rem; padding:1px 5px; border-radius:1px; letter-spacing:0.08em; text-transform:uppercase; margin-left:4px; }
                 </style>
                 <div class="grid-wrap">
                 <div class="grid-head">
@@ -1106,11 +1133,14 @@ if page == "Race Predictor":
                     dc      = "#2aff7a" if delta > 0 else ("#e8002d" if delta < 0 else "rgba(245,245,245,0.4)")
                     upset   = pos <= 5 and gp >= 8
                     badge   = '<span class="badge">UPSET</span>' if upset else ""
+                    # Show telemetry tag if quali_gap_ms is a real value (not default)
+                    has_tele = tele_active and not pd.isna(row.get("quali_gap_ms", np.nan))
+                    tele_tag = '<span class="tele-tag">TELE</span>' if has_tele else ""
                     grid_html += f"""
                     <div class="driver-row">
                         <span class="pos {pos_cls}">{pos:02d}</span>
                         <span class="dot" style="background:{tc}"></span>
-                        <span class="name">{row.get('name_acronym','?')}{badge}</span>
+                        <span class="name">{row.get('name_acronym','?')}{badge}{tele_tag}</span>
                         <span class="team">{str(row.get('team_name','?'))[:18]}</span>
                         <span class="grid-col">P{gp}</span>
                         <span class="delta" style="color:{dc}">{ds}</span>
@@ -1158,12 +1188,23 @@ if page == "Race Predictor":
                 ):
                     with col:
                         tc = get_team_color(row.get("team_name", ""))
+                        # Show telemetry signal if available
+                        tele_html = ""
+                        if tele_active and not pd.isna(row.get("quali_gap_ms", np.nan)):
+                            qg  = row.get("quali_gap_ms", 0)
+                            lc_ = row.get("lap_consistency", 0)
+                            tele_html = f"""
+                            <div style="margin-top:10px;padding-top:8px;border-top:1px solid #222;
+                            font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:rgba(245,245,245,0.35)">
+                            QUALI GAP: {qg:+.0f}ms &nbsp;·&nbsp; CONSISTENCY: {lc_:.0f}ms σ
+                            </div>"""
                         st.markdown(f"""
                         <div class="pw-card" style="border-top:3px solid {tc};text-align:center;padding:1.4rem 1rem">
                             <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:rgba(245,245,245,0.35);letter-spacing:0.12em;margin-bottom:6px">P{medal}</div>
                             <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.8rem;font-weight:800;letter-spacing:0.06em">{row.get('name_acronym','?')}</div>
                             <div style="font-family:'Rajdhani',sans-serif;font-size:0.85rem;color:rgba(245,245,245,0.5);margin-top:2px">{row.get('team_name','?')}</div>
                             <div style="font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:rgba(245,245,245,0.3);margin-top:8px">Started P{int(row.get('grid_pos', 0))}</div>
+                            {tele_html}
                         </div>
                         """, unsafe_allow_html=True)
 
@@ -1196,6 +1237,132 @@ if page == "Race Predictor":
                         </div>
                         """, unsafe_allow_html=True)
 
+            # ── TAB 5: TELEMETRY INSIGHTS ─────────────────
+            with tab_tele:
+                if not tele_active:
+                    st.markdown("""
+                    <div class="pw-card pw-card-accent">
+                        <div class="pw-section-label">Telemetry Not Available</div>
+                        <div style="font-family:'Rajdhani',sans-serif;font-size:0.95rem;color:rgba(245,245,245,0.6);line-height:1.7">
+                        Click <strong style="color:#e8002d">Fetch Telemetry (FastF1)</strong> in the sidebar,
+                        then retrain the model to unlock telemetry-powered insights.
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                else:
+                    tele_cols_present = [c for c in [
+                        "name_acronym", "quali_gap_ms", "lap_consistency",
+                        "race_pace_delta", "tyre_deg_rate", "throttle_pct",
+                        "s1_delta", "s2_delta", "s3_delta",
+                    ] if c in result_df.columns]
+
+                    tele_show = result_df[tele_cols_present].copy()
+
+                    # Quali gap chart
+                    if "quali_gap_ms" in tele_show.columns:
+                        st.markdown("<div class='pw-section-label'>Qualifying Gap to Pole (ms)</div>", unsafe_allow_html=True)
+                        tele_sorted = tele_show.dropna(subset=["quali_gap_ms"]).sort_values("quali_gap_ms")
+                        bar_colors  = [get_team_color(result_df.loc[result_df["name_acronym"] == a, "team_name"].values[0])
+                                       if a in result_df["name_acronym"].values else "#555"
+                                       for a in tele_sorted["name_acronym"]]
+                        fig_q = go.Figure(go.Bar(
+                            x=tele_sorted["name_acronym"],
+                            y=tele_sorted["quali_gap_ms"],
+                            marker_color=bar_colors,
+                            marker_line_width=0,
+                            text=[f"+{v:.0f}ms" for v in tele_sorted["quali_gap_ms"]],
+                            textposition="outside",
+                            textfont=dict(family="Share Tech Mono", size=9, color="#f5f5f5"),
+                        ))
+                        fig_q.update_layout(
+                            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                            font=dict(family="Rajdhani", color="#f5f5f5"),
+                            xaxis=dict(gridcolor="#1a1a1a", tickfont=dict(family="Barlow Condensed", size=10)),
+                            yaxis=dict(gridcolor="#1a1a1a", title=dict(text="GAP (ms)", font=dict(family="Share Tech Mono", size=9, color="rgba(245,245,245,0.4)"))),
+                            margin=dict(l=40, r=20, t=10, b=40), height=280,
+                        )
+                        st.plotly_chart(fig_q, use_container_width=True)
+
+                    # Lap consistency chart
+                    if "lap_consistency" in tele_show.columns:
+                        st.markdown("<div class='pw-section-label'>Lap Consistency — Lower is Better (ms σ)</div>", unsafe_allow_html=True)
+                        con_sorted = tele_show.dropna(subset=["lap_consistency"]).sort_values("lap_consistency")
+                        bar_colors_c = [get_team_color(result_df.loc[result_df["name_acronym"] == a, "team_name"].values[0])
+                                        if a in result_df["name_acronym"].values else "#555"
+                                        for a in con_sorted["name_acronym"]]
+                        fig_c = go.Figure(go.Bar(
+                            x=con_sorted["name_acronym"],
+                            y=con_sorted["lap_consistency"],
+                            marker_color=bar_colors_c,
+                            marker_line_width=0,
+                            text=[f"{v:.0f}" for v in con_sorted["lap_consistency"]],
+                            textposition="outside",
+                            textfont=dict(family="Share Tech Mono", size=9, color="#f5f5f5"),
+                        ))
+                        fig_c.update_layout(
+                            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                            font=dict(family="Rajdhani", color="#f5f5f5"),
+                            xaxis=dict(gridcolor="#1a1a1a", tickfont=dict(family="Barlow Condensed", size=10)),
+                            yaxis=dict(gridcolor="#1a1a1a", title=dict(text="STD DEV (ms)", font=dict(family="Share Tech Mono", size=9, color="rgba(245,245,245,0.4)"))),
+                            margin=dict(l=40, r=20, t=10, b=40), height=280,
+                        )
+                        st.plotly_chart(fig_c, use_container_width=True)
+
+                    # Tyre deg rate
+                    if "tyre_deg_rate" in tele_show.columns:
+                        st.markdown("<div class='pw-section-label'>Tyre Degradation Rate (ms/lap — Lower is Better)</div>", unsafe_allow_html=True)
+                        deg_sorted = tele_show.dropna(subset=["tyre_deg_rate"]).sort_values("tyre_deg_rate")
+                        bar_colors_d = [get_team_color(result_df.loc[result_df["name_acronym"] == a, "team_name"].values[0])
+                                        if a in result_df["name_acronym"].values else "#555"
+                                        for a in deg_sorted["name_acronym"]]
+                        fig_d = go.Figure(go.Bar(
+                            x=deg_sorted["name_acronym"],
+                            y=deg_sorted["tyre_deg_rate"],
+                            marker_color=bar_colors_d,
+                            marker_line_width=0,
+                            text=[f"{v:.2f}" for v in deg_sorted["tyre_deg_rate"]],
+                            textposition="outside",
+                            textfont=dict(family="Share Tech Mono", size=9, color="#f5f5f5"),
+                        ))
+                        fig_d.update_layout(
+                            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                            font=dict(family="Rajdhani", color="#f5f5f5"),
+                            xaxis=dict(gridcolor="#1a1a1a", tickfont=dict(family="Barlow Condensed", size=10)),
+                            yaxis=dict(gridcolor="#1a1a1a", title=dict(text="DEG RATE (ms/lap)", font=dict(family="Share Tech Mono", size=9, color="rgba(245,245,245,0.4)"))),
+                            margin=dict(l=40, r=20, t=10, b=40), height=280,
+                        )
+                        st.plotly_chart(fig_d, use_container_width=True)
+
+                    # Sector radar for top 5
+                    if all(c in tele_show.columns for c in ["s1_delta", "s2_delta", "s3_delta"]):
+                        st.markdown("<div class='pw-section-label'>Sector Delta to Pole — Top 5 (ms)</div>", unsafe_allow_html=True)
+                        top5 = result_df.head(5)
+                        fig_s = go.Figure()
+                        for _, row in top5.iterrows():
+                            abbr = row.get("name_acronym", "?")
+                            tc   = get_team_color(row.get("team_name", ""))
+                            s1   = row.get("s1_delta", 0)
+                            s2   = row.get("s2_delta", 0)
+                            s3   = row.get("s3_delta", 0)
+                            if any(pd.isna(v) for v in [s1, s2, s3]):
+                                continue
+                            fig_s.add_trace(go.Bar(
+                                name=abbr,
+                                x=["S1", "S2", "S3"],
+                                y=[s1, s2, s3],
+                                marker_color=tc,
+                            ))
+                        fig_s.update_layout(
+                            barmode="group",
+                            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                            font=dict(family="Rajdhani", color="#f5f5f5"),
+                            legend=dict(font=dict(family="Share Tech Mono", size=10), bgcolor="rgba(0,0,0,0)"),
+                            xaxis=dict(gridcolor="#1a1a1a"),
+                            yaxis=dict(gridcolor="#1a1a1a", title=dict(text="DELTA (ms)", font=dict(family="Share Tech Mono", size=9, color="rgba(245,245,245,0.4)"))),
+                            margin=dict(l=40, r=20, t=10, b=40), height=300,
+                        )
+                        st.plotly_chart(fig_s, use_container_width=True)
+
 # ─────────────────────────────────────────────────────────────
 # PAGE 2 — MODEL PERFORMANCE
 # ─────────────────────────────────────────────────────────────
@@ -1211,6 +1378,16 @@ elif page == "Model Performance":
         with c2: st.metric("XGBoost MAE",    f"{meta.get('xgb_mae', 0):.2f} pos")
         with c3: st.metric("RF MAE",          f"{meta.get('rf_mae',  0):.2f} pos")
         with c4: st.metric("Podium Accuracy", f"{meta.get('xgb_podium_acc', 0) * 100:.1f}%")
+
+        # Telemetry features status
+        if tele_active:
+            st.markdown("""
+            <div class="pw-card pw-card-green" style="padding:0.7rem 1.2rem;margin-top:0.8rem">
+                <div style="font-family:'Share Tech Mono',monospace;font-size:0.68rem;color:#2aff7a;letter-spacing:0.1em">
+                FASTF1 TELEMETRY FEATURES ACTIVE — 9 additional columns in model
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
     else:
         st.info("Train the model first to see performance metrics.")
 
@@ -1223,12 +1400,22 @@ elif page == "Model Performance":
                 unsafe_allow_html=True,
             )
             imp = pd.Series(model.feature_importances_, index=fc).sort_values()
-            bar_colors = [
-                "#e8002d" if v == imp.max() else
-                "#ffcd00" if v >= imp.quantile(0.75) else
-                "#444"
-                for v in imp.values
-            ]
+
+            # Colour: red = top, yellow = top quartile, green = FastF1 feature, grey = rest
+            fastf1_cols = {"quali_gap_ms","s1_delta","s2_delta","s3_delta",
+                           "lap_consistency","race_pace_delta","tyre_deg_rate",
+                           "throttle_pct","sc_laps_actual"}
+            bar_colors = []
+            for feat, v in imp.items():
+                if v == imp.max():
+                    bar_colors.append("#e8002d")
+                elif feat in fastf1_cols:
+                    bar_colors.append("#2aff7a")
+                elif v >= imp.quantile(0.75):
+                    bar_colors.append("#ffcd00")
+                else:
+                    bar_colors.append("#444")
+
             fig = go.Figure(go.Bar(
                 x=imp.values, y=imp.index, orientation="h",
                 marker_color=bar_colors, marker_line_width=0,
@@ -1244,9 +1431,17 @@ elif page == "Model Performance":
                     title=dict(text="IMPORTANCE SCORE", font=dict(family="Share Tech Mono", size=9, color="rgba(245,245,245,0.4)")),
                 ),
                 yaxis=dict(tickfont=dict(family="Share Tech Mono", size=10)),
-                margin=dict(l=10, r=60, t=10, b=40), height=520,
+                margin=dict(l=10, r=60, t=10, b=40), height=600,
             )
             st.plotly_chart(fig, use_container_width=True)
+            st.markdown("""
+            <div style="font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:rgba(245,245,245,0.3);letter-spacing:0.06em">
+            <span style="color:#e8002d">■</span> Top feature &nbsp;
+            <span style="color:#ffcd00">■</span> Top quartile &nbsp;
+            <span style="color:#2aff7a">■</span> FastF1 telemetry feature &nbsp;
+            <span style="color:#444">■</span> Standard feature
+            </div>
+            """, unsafe_allow_html=True)
 
     # Feature coverage table
     st.markdown("<hr/>", unsafe_allow_html=True)
@@ -1265,6 +1460,10 @@ elif page == "Model Performance":
             "air/track_temperature", "rainfall", "humidity", "wind_speed",
             "track_temp_delta", "circuit_type_enc", "is_street_circuit",
             "sc_probability",
+            "— FastF1 Features —",
+            "quali_gap_ms", "s1_delta / s2_delta / s3_delta",
+            "lap_consistency", "race_pace_delta",
+            "tyre_deg_rate", "throttle_pct", "sc_laps_actual",
         ],
         "Source": [
             "User input", "Derived from grid", "Training dataset",
@@ -1276,6 +1475,10 @@ elif page == "Model Performance":
             "User input", "User input", "User input", "User input",
             "Derived", "OpenF1 meetings API", "Derived",
             "OpenF1 race control + training",
+            "—",
+            "FastF1 qualifying session", "FastF1 qualifying session",
+            "FastF1 race laps", "FastF1 race laps",
+            "FastF1 race laps", "FastF1 car telemetry", "FastF1 track_status",
         ],
         "Priority": [
             "P1 — Always live", "P1 — Derived", "P2 — Historical prior",
@@ -1287,9 +1490,13 @@ elif page == "Model Performance":
             "P1 — User input", "P1 — User input", "P1 — User input", "P1 — User input",
             "P1 — Derived", "P1 — Live API", "P1 — Derived",
             "P1 — Live + historical",
+            "—",
+            "P2 — FastF1 prior", "P2 — FastF1 prior",
+            "P2 — FastF1 prior", "P2 — FastF1 prior",
+            "P2 — FastF1 prior", "P2 — FastF1 prior", "P2 — FastF1 prior",
         ],
     }
-    st.dataframe(pd.DataFrame(coverage_data), use_container_width=True, height=500)
+    st.dataframe(pd.DataFrame(coverage_data), use_container_width=True, height=600)
 
 # ─────────────────────────────────────────────────────────────
 # PAGE 3 — DATA EXPLORER
@@ -1313,31 +1520,75 @@ elif page == "Data Explorer":
         with c3: st.metric("Race Events", df["circuit_short_name"].nunique() if "circuit_short_name" in df else "N/A")
         with c4: st.metric("Features",    len(df.columns))
 
+        # Telemetry coverage stat
+        if tele_active and "quali_gap_ms" in df.columns:
+            tele_coverage = df["quali_gap_ms"].notna().mean()
+            st.markdown(f"""
+            <div class="pw-card pw-card-green" style="padding:0.7rem 1.2rem;margin-top:0.5rem">
+                <div style="font-family:'Share Tech Mono',monospace;font-size:0.68rem;color:#2aff7a;letter-spacing:0.1em">
+                FASTF1 TELEMETRY COVERAGE: {tele_coverage * 100:.1f}% of rows enriched
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
         st.markdown("<hr/>", unsafe_allow_html=True)
 
-        if "year" in df.columns:
-            cf1, cf2 = st.columns(2)
-            with cf1:
-                yr = st.selectbox("Season", sorted(df["year"].unique(), reverse=True))
-            with cf2:
-                circs = (
-                    ["All"] + sorted(df[df["year"] == yr]["circuit_short_name"].unique().tolist())
-                    if "circuit_short_name" in df.columns else ["All"]
-                )
-                circ = st.selectbox("Circuit", circs)
+        tab_main, tab_tele_data = st.tabs(["Race Data", "Telemetry Data"])
 
-            filt = df[df["year"] == yr]
-            if circ != "All" and "circuit_short_name" in filt.columns:
-                filt = filt[filt["circuit_short_name"] == circ]
+        with tab_main:
+            if "year" in df.columns:
+                cf1, cf2 = st.columns(2)
+                with cf1:
+                    yr = st.selectbox("Season", sorted(df["year"].unique(), reverse=True))
+                with cf2:
+                    circs = (
+                        ["All"] + sorted(df[df["year"] == yr]["circuit_short_name"].unique().tolist())
+                        if "circuit_short_name" in df.columns else ["All"]
+                    )
+                    circ = st.selectbox("Circuit", circs)
 
-            show_cols = [c for c in [
-                "name_acronym", "team_name", "circuit_short_name",
-                "grid_position", "finish_position", "quali_delta_to_pole",
-                "driver_form_3", "driver_form_5", "circuit_specialist_score",
-                "champ_points_before", "team_dnf_rate", "sc_probability",
-                "rainfall", "total_stints", "num_pit_stops",
-            ] if c in filt.columns]
-            st.dataframe(filt[show_cols].reset_index(drop=True), use_container_width=True, height=380)
+                filt = df[df["year"] == yr]
+                if circ != "All" and "circuit_short_name" in filt.columns:
+                    filt = filt[filt["circuit_short_name"] == circ]
+
+                show_cols = [c for c in [
+                    "name_acronym", "team_name", "circuit_short_name",
+                    "grid_position", "finish_position", "quali_delta_to_pole",
+                    "driver_form_3", "driver_form_5", "circuit_specialist_score",
+                    "champ_points_before", "team_dnf_rate", "sc_probability",
+                    "rainfall", "total_stints", "num_pit_stops",
+                ] if c in filt.columns]
+                st.dataframe(filt[show_cols].reset_index(drop=True), use_container_width=True, height=380)
+
+        with tab_tele_data:
+            if not tele_active:
+                st.markdown("""
+                <div class="pw-card pw-card-accent">
+                    <div style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:rgba(245,245,245,0.5)">
+                    No telemetry data found. Click Fetch Telemetry (FastF1) in the sidebar.
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                tele_view_cols = [c for c in [
+                    "name_acronym", "year",
+                    "quali_gap_ms", "s1_delta", "s2_delta", "s3_delta",
+                    "lap_consistency", "race_pace_delta",
+                    "tyre_deg_rate", "throttle_pct", "sc_laps_actual",
+                ] if c in df.columns]
+                tele_df = df[tele_view_cols].dropna(subset=["quali_gap_ms"])
+
+                if "year" in tele_df.columns:
+                    yr_t = st.selectbox("Season", sorted(tele_df["year"].unique(), reverse=True), key="tele_yr")
+                    tele_df = tele_df[tele_df["year"] == yr_t]
+
+                st.dataframe(tele_df.reset_index(drop=True), use_container_width=True, height=400)
+
+                # Summary stats
+                st.markdown("<div class='pw-section-label' style='margin-top:1rem'>Telemetry Feature Statistics</div>", unsafe_allow_html=True)
+                stat_cols = [c for c in ["quali_gap_ms", "lap_consistency", "race_pace_delta", "tyre_deg_rate", "throttle_pct"] if c in tele_df.columns]
+                if stat_cols:
+                    st.dataframe(tele_df[stat_cols].describe().round(2), use_container_width=True)
 
         # Scatter: grid vs finish
         if "grid_position" in df.columns and "finish_position" in df.columns:
@@ -1398,77 +1649,148 @@ elif page == "What-If Simulator":
     if not model_exists or model is None:
         st.info("Train the model first to use the What-If Simulator.")
     else:
-        # All 22 driver acronyms in your specified order
         all_acronyms = [
             "NOR", "GAS", "LEC", "LAW", "HAM", "VER", "PER", "STR", "OCO", "SAI",
             "BOR", "ANT", "ALB", "LIN", "RUS", "HAD", "ALO", "HUL", "COL", "BOT",
             "PIA", "BEA",
         ]
 
-        cl, cr = st.columns(2)
-        with cl:
-            st.markdown("<div class='what-if-label'>Driver Variables</div>", unsafe_allow_html=True)
-            driver_name = st.selectbox("Driver", all_acronyms)
-            grid_pos    = st.slider("Grid Position",                    1, 22,  5)
-            champ_pts   = st.slider("Championship Points",              0, 450, 200)
-            champ_pos_v = st.slider("Championship Position",            1, 22,  4)
-            driver_form = st.slider("Driver Form (avg last 3 races)", 1.0, 22.0, float(grid_pos), step=0.5)
-            dnf_rate_d  = st.slider("Driver DNF Rate",               0.0, 0.4, 0.05, step=0.01)
+        tab_standard, tab_telemetry = st.tabs(["Standard Variables", "Telemetry Variables"])
 
-        with cr:
-            st.markdown("<div class='what-if-label'>Race Conditions</div>", unsafe_allow_html=True)
-            rain_wi    = st.selectbox("Rainfall", ["Dry", "Wet", "Mixed"])
-            air_t      = st.slider("Air Temp (°C)",         10, 45, 24)
-            track_t    = st.slider("Track Temp (°C)",       15, 65, 38)
-            humid      = st.slider("Humidity (%)",          20, 100, 55)
-            wind_s     = st.slider("Wind Speed (m/s)",       0, 15,  2)
-            sc_prob_wi = st.slider("Safety Car Probability", 0.0, 1.0, 0.35, step=0.05)
-            circuit_wi = st.selectbox("Circuit Type", ["Permanent", "Street", "Road"])
-            team_dnf_wi= st.slider("Constructor DNF Rate",  0.0, 0.3, 0.05, step=0.01)
-            pit_eff_wi = st.slider("Pit Stop Duration (s)", 1.8, 4.5, 2.5, step=0.1)
-            compound_wi= st.selectbox("Starting Compound", ["SOFT", "MEDIUM", "HARD", "INTERMEDIATE", "WET"])
+        with tab_standard:
+            cl, cr = st.columns(2)
+            with cl:
+                st.markdown("<div class='what-if-label'>Driver Variables</div>", unsafe_allow_html=True)
+                driver_name = st.selectbox("Driver", all_acronyms)
+                grid_pos    = st.slider("Grid Position",                    1, 22,  5)
+                champ_pts   = st.slider("Championship Points",              0, 450, 200)
+                champ_pos_v = st.slider("Championship Position",            1, 22,  4)
+                driver_form = st.slider("Driver Form (avg last 3 races)", 1.0, 22.0, float(grid_pos), step=0.5)
+                dnf_rate_d  = st.slider("Driver DNF Rate",               0.0, 0.4, 0.05, step=0.01)
 
-        circuit_enc_wi  = {"Permanent": 0, "Street": 1, "Road": 2}[circuit_wi]
-        compound_enc_wi = {"SOFT": 0, "MEDIUM": 1, "HARD": 2, "INTERMEDIATE": 3, "WET": 4}[compound_wi]
-        rain_val        = 1 if rain_wi == "Wet" else (0.5 if rain_wi == "Mixed" else 0)
+            with cr:
+                st.markdown("<div class='what-if-label'>Race Conditions</div>", unsafe_allow_html=True)
+                rain_wi    = st.selectbox("Rainfall", ["Dry", "Wet", "Mixed"])
+                air_t      = st.slider("Air Temp (°C)",         10, 45, 24)
+                track_t    = st.slider("Track Temp (°C)",       15, 65, 38)
+                humid      = st.slider("Humidity (%)",          20, 100, 55)
+                wind_s     = st.slider("Wind Speed (m/s)",       0, 15,  2)
+                sc_prob_wi = st.slider("Safety Car Probability", 0.0, 1.0, 0.35, step=0.05)
+                circuit_wi = st.selectbox("Circuit Type", ["Permanent", "Street", "Road"])
+                team_dnf_wi= st.slider("Constructor DNF Rate",  0.0, 0.3, 0.05, step=0.01)
+                pit_eff_wi = st.slider("Pit Stop Duration (s)", 1.8, 4.5, 2.5, step=0.1)
+                compound_wi= st.selectbox("Starting Compound", ["SOFT", "MEDIUM", "HARD", "INTERMEDIATE", "WET"])
+
+        with tab_telemetry:
+            if not tele_active:
+                st.markdown("""
+                <div class="pw-card pw-card-accent">
+                    <div style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:rgba(245,245,245,0.5)">
+                    Fetch FastF1 telemetry first to unlock these controls.
+                    The sliders below use default values until telemetry data is loaded.
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+
+            tl, tr = st.columns(2)
+            with tl:
+                st.markdown("<div class='what-if-label'>Qualifying Telemetry</div>", unsafe_allow_html=True)
+                quali_gap_wi = st.slider("Qualifying Gap to Pole (ms)", 0.0, 3000.0, float((grid_pos if 'grid_pos' in dir() else 5) - 1) * 80.0, step=10.0)
+                s1_wi        = st.slider("Sector 1 Delta (ms)",          0.0, 1000.0, 100.0, step=5.0)
+                s2_wi        = st.slider("Sector 2 Delta (ms)",          0.0, 1000.0, 100.0, step=5.0)
+                s3_wi        = st.slider("Sector 3 Delta (ms)",          0.0, 1000.0, 100.0, step=5.0)
+            with tr:
+                st.markdown("<div class='what-if-label'>Race Telemetry</div>", unsafe_allow_html=True)
+                consistency_wi   = st.slider("Lap Consistency σ (ms)",       50.0, 1500.0, 350.0, step=10.0)
+                pace_delta_wi    = st.slider("Race Pace Delta to Leader (ms)", 0.0, 3000.0, 500.0, step=10.0)
+                deg_rate_wi      = st.slider("Tyre Deg Rate (ms/lap)",        0.0,  100.0,  15.0, step=0.5)
+                throttle_wi      = st.slider("Throttle % on Fastest Lap",    50.0,  100.0,  72.0, step=0.5)
+                sc_laps_wi       = st.slider("SC Laps (actual)",              0,      20,     3)
+
+        # Build inputs — use tab_standard values, add telemetry
+        try:
+            _grid_pos    = grid_pos
+            _champ_pts   = champ_pts
+            _champ_pos_v = champ_pos_v
+            _driver_form = driver_form
+            _dnf_rate_d  = dnf_rate_d
+            _rain_wi     = rain_wi
+            _air_t       = air_t
+            _track_t     = track_t
+            _humid       = humid
+            _wind_s      = wind_s
+            _sc_prob_wi  = sc_prob_wi
+            _circuit_wi  = circuit_wi
+            _team_dnf_wi = team_dnf_wi
+            _pit_eff_wi  = pit_eff_wi
+            _compound_wi = compound_wi
+        except NameError:
+            _grid_pos    = 5
+            _champ_pts   = 200
+            _champ_pos_v = 4
+            _driver_form = 5.0
+            _dnf_rate_d  = 0.05
+            _rain_wi     = "Dry"
+            _air_t       = 24
+            _track_t     = 38
+            _humid       = 55
+            _wind_s      = 2
+            _sc_prob_wi  = 0.35
+            _circuit_wi  = "Permanent"
+            _team_dnf_wi = 0.05
+            _pit_eff_wi  = 2.5
+            _compound_wi = "MEDIUM"
+
+        circuit_enc_wi  = {"Permanent": 0, "Street": 1, "Road": 2}[_circuit_wi]
+        compound_enc_wi = {"SOFT": 0, "MEDIUM": 1, "HARD": 2, "INTERMEDIATE": 3, "WET": 4}[_compound_wi]
+        rain_val        = 1 if _rain_wi == "Wet" else (0.5 if _rain_wi == "Mixed" else 0)
 
         fc = meta.get("feature_cols", FEATURE_COLS) if meta else FEATURE_COLS
 
         input_vals = {
-            "grid_position":             grid_pos,
-            "quali_delta_to_pole":       (grid_pos - 1) * 0.08,
-            "driver_form_3":             driver_form,
-            "driver_form_5":             driver_form * 1.02,
-            "circuit_specialist_score":  driver_form * 0.95,
-            "dnf_rate_driver":           dnf_rate_d,
+            "grid_position":             _grid_pos,
+            "quali_delta_to_pole":       (_grid_pos - 1) * 0.08,
+            "driver_form_3":             _driver_form,
+            "driver_form_5":             _driver_form * 1.02,
+            "circuit_specialist_score":  _driver_form * 0.95,
+            "dnf_rate_driver":           _dnf_rate_d,
             "seasons_experience":        5.0,
-            "team_dnf_rate":             team_dnf_wi,
-            "constructor_avg_finish":    float(grid_pos),
-            "pit_stop_efficiency":       pit_eff_wi,
-            "champ_points_before":       float(champ_pts),
-            "champ_position_before":     float(champ_pos_v),
-            "points_gap_to_leader":      float(max(0, 450 - champ_pts)),
+            "team_dnf_rate":             _team_dnf_wi,
+            "constructor_avg_finish":    float(_grid_pos),
+            "pit_stop_efficiency":       _pit_eff_wi,
+            "champ_points_before":       float(_champ_pts),
+            "champ_position_before":     float(_champ_pos_v),
+            "points_gap_to_leader":      float(max(0, 450 - _champ_pts)),
             "starting_compound_enc":     compound_enc_wi,
             "total_stints":              2.0,
             "avg_tyre_age":              2.0,
             "tyre_age_at_start":         0.0,
             "num_pit_stops":             1.0,
-            "avg_stop_duration":         pit_eff_wi,
-            "air_temperature":           float(air_t),
-            "track_temperature":         float(track_t),
-            "humidity":                  float(humid),
-            "wind_speed":                float(wind_s),
+            "avg_stop_duration":         _pit_eff_wi,
+            "air_temperature":           float(_air_t),
+            "track_temperature":         float(_track_t),
+            "humidity":                  float(_humid),
+            "wind_speed":                float(_wind_s),
             "rainfall":                  rain_val,
-            "track_temp_delta":          float(track_t) - float(air_t),
+            "track_temp_delta":          float(_track_t) - float(_air_t),
             "circuit_type_enc":          circuit_enc_wi,
             "is_street_circuit":         1 if circuit_enc_wi == 1 else 0,
-            "sc_probability":            sc_prob_wi,
+            "sc_probability":            _sc_prob_wi,
+            # FastF1 telemetry
+            "quali_gap_ms":              quali_gap_wi,
+            "s1_delta":                  s1_wi,
+            "s2_delta":                  s2_wi,
+            "s3_delta":                  s3_wi,
+            "lap_consistency":           consistency_wi,
+            "race_pace_delta":           pace_delta_wi,
+            "tyre_deg_rate":             deg_rate_wi,
+            "throttle_pct":              throttle_wi,
+            "sc_laps_actual":            float(sc_laps_wi),
         }
 
         X        = np.array([[input_vals.get(c, 0) for c in fc]])
         raw_pred = model.predict(X)[0]
 
-        # Apply same dominance snap as Race Predictor for consistency
         dominance = (
             input_vals.get("driver_form_3",        10)
             + input_vals.get("sc_probability",     0.35) * 10
@@ -1476,15 +1798,15 @@ elif page == "What-If Simulator":
             + input_vals.get("champ_position_before", 10)
             + input_vals.get("points_gap_to_leader", 200) / 50
         )
-        if grid_pos == 1 and dominance < 8.0:
+        if _grid_pos == 1 and dominance < 8.0:
             pred_pos = 1
-        elif grid_pos == 1 and dominance < 12.0 and raw_pred < 2.5:
+        elif _grid_pos == 1 and dominance < 12.0 and raw_pred < 2.5:
             pred_pos = 1
         else:
             pred_pos = max(1, min(22, round(raw_pred)))
 
         st.markdown("<hr/>", unsafe_allow_html=True)
-        delta_g   = grid_pos - pred_pos
+        delta_g   = _grid_pos - pred_pos
         delta_str = f"+{delta_g}" if delta_g > 0 else str(delta_g)
         pos_color = (
             "#ffcd00" if pred_pos <= 3 else
@@ -1493,15 +1815,19 @@ elif page == "What-If Simulator":
             "#f5f5f5"
         )
 
+        # Show which driver acronym is selected safely
+        _driver_display = driver_name if "driver_name" in dir() else "DRV"
+
         st.markdown(f"""
         <div class="pw-card pw-card-accent" style="text-align:center;padding:2rem">
-            <div class="pw-section-label" style="text-align:center">{driver_name} — Predicted Outcome</div>
+            <div class="pw-section-label" style="text-align:center">{_driver_display} — Predicted Outcome</div>
             <div style="font-family:'Barlow Condensed',sans-serif;font-size:5rem;font-weight:800;letter-spacing:0.04em;color:{pos_color};line-height:1">
             P{pred_pos:02d}</div>
             <div style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:rgba(245,245,245,0.4);margin-top:8px">
-            STARTED P{grid_pos:02d} &nbsp;·&nbsp; <span style="color:{pos_color}">{delta_str} POSITIONS</span>
-            &nbsp;·&nbsp; SC PROB {sc_prob_wi * 100:.0f}%
-            &nbsp;·&nbsp; {compound_wi}
+            STARTED P{_grid_pos:02d} &nbsp;·&nbsp; <span style="color:{pos_color}">{delta_str} POSITIONS</span>
+            &nbsp;·&nbsp; SC PROB {_sc_prob_wi * 100:.0f}%
+            &nbsp;·&nbsp; {_compound_wi}
+            {'&nbsp;·&nbsp; <span style="color:#2aff7a">TELE ACTIVE</span>' if tele_active else ''}
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -1516,8 +1842,9 @@ elif page == "What-If Simulator":
             v = dict(input_vals)
             v["grid_position"]            = gp
             v["quali_delta_to_pole"]      = (gp - 1) * 0.08
-            v["driver_form_3"]            = max(1, driver_form + (gp - grid_pos) * 0.3)
-            v["circuit_specialist_score"] = max(1, driver_form * 0.95 + (gp - grid_pos) * 0.3)
+            v["driver_form_3"]            = max(1, _driver_form + (gp - _grid_pos) * 0.3)
+            v["circuit_specialist_score"] = max(1, _driver_form * 0.95 + (gp - _grid_pos) * 0.3)
+            v["quali_gap_ms"]             = max(0, quali_gap_wi + (gp - _grid_pos) * 80.0)
             Xr = np.array([[v.get(c, 0) for c in fc]])
             preds_r.append(max(1, min(22, round(model.predict(Xr)[0]))))
 
@@ -1529,7 +1856,7 @@ elif page == "What-If Simulator":
             fill="tozeroy", fillcolor="rgba(232,0,45,0.06)",
         ))
         fig3.add_trace(go.Scatter(
-            x=[grid_pos], y=[pred_pos], mode="markers",
+            x=[_grid_pos], y=[pred_pos], mode="markers",
             marker=dict(color="#ffcd00", size=13, symbol="diamond", line=dict(color="#fff", width=1)),
             showlegend=False,
         ))
@@ -1582,6 +1909,45 @@ elif page == "What-If Simulator":
         )
         st.plotly_chart(fig4, use_container_width=True)
 
+        # Quali gap sensitivity (only if telemetry active)
+        if tele_active:
+            st.markdown(
+                "<div class='pw-section-label'>Qualifying Gap Sensitivity</div>",
+                unsafe_allow_html=True,
+            )
+            qg_range = list(range(0, 3001, 100))
+            qg_preds = []
+            for qg in qg_range:
+                v = dict(input_vals)
+                v["quali_gap_ms"] = float(qg)
+                Xr = np.array([[v.get(c, 0) for c in fc]])
+                qg_preds.append(max(1, min(22, round(model.predict(Xr)[0]))))
+
+            fig5 = go.Figure(go.Scatter(
+                x=qg_range, y=qg_preds, mode="lines",
+                line=dict(color="#2aff7a", width=2),
+                fill="tozeroy", fillcolor="rgba(42,255,122,0.05)",
+            ))
+            fig5.add_trace(go.Scatter(
+                x=[quali_gap_wi], y=[pred_pos], mode="markers",
+                marker=dict(color="#2aff7a", size=11, symbol="diamond", line=dict(color="#fff", width=1)),
+                showlegend=False,
+            ))
+            fig5.update_layout(
+                paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                font=dict(family="Rajdhani", color="#f5f5f5"),
+                xaxis=dict(
+                    gridcolor="#1a1a1a",
+                    title=dict(text="QUALIFYING GAP TO POLE (ms)", font=dict(family="Share Tech Mono", size=9, color="rgba(245,245,245,0.4)")),
+                ),
+                yaxis=dict(
+                    gridcolor="#1a1a1a", autorange="reversed",
+                    title=dict(text="PREDICTED FINISH", font=dict(family="Share Tech Mono", size=9, color="rgba(245,245,245,0.4)")),
+                ),
+                showlegend=False, margin=dict(l=40, r=20, t=10, b=40), height=260,
+            )
+            st.plotly_chart(fig5, use_container_width=True)
+
 # ─────────────────────────────────────────────────────────────
 # FOOTER
 # ─────────────────────────────────────────────────────────────
@@ -1589,7 +1955,7 @@ st.markdown("<hr/>", unsafe_allow_html=True)
 st.markdown("""
 <div style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;
 color:rgba(245,245,245,0.2);letter-spacing:0.1em;text-align:center;padding:0.5rem 0">
-PITWALL INTEL v1.0 &nbsp;·&nbsp; DATA: OPENF1.ORG &nbsp;·&nbsp;
+PITWALL INTEL v1.1 &nbsp;·&nbsp; DATA: OPENF1.ORG + FASTF1 &nbsp;·&nbsp;
 MODEL: XGBOOST + RANDOM FOREST &nbsp;·&nbsp; FOR EDUCATIONAL USE ONLY
 </div>
 """, unsafe_allow_html=True)
