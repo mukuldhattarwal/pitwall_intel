@@ -30,7 +30,7 @@
 
 ## Overview
 
-**PitWall Intel** is an F1 race result predictor that thinks like a race engineer. It pulls 4 seasons of real Formula 1 data from the **OpenF1 API**, enriches it with deep lap-by-lap telemetry from **FastF1** (lap consistency, tyre degradation, sector deltas, throttle telemetry, qualifying gaps), engineers 37+ predictive features from qualifying pace, tyre strategy, championship pressure, pit efficiency, and weather — then runs an **XGBoost model** to predict the full 20-car race finishing order before lights out.
+**PitWall Intel** is an F1 race result predictor that thinks like a race engineer. It pulls 4 seasons of real Formula 1 data from the **OpenF1 API**, enriches it with deep lap-by-lap telemetry from **FastF1** (lap consistency, tyre degradation, sector deltas, throttle telemetry, qualifying gaps), engineers 37+ predictive features from qualifying pace, tyre strategy, championship pressure, pit efficiency, and weather then runs an **XGBoost model** to predict the full 20-car race finishing order before lights out.
 
 Built for data science enthusiasts who want a real, end-to-end ML project with real Formula 1 data and results worth showing off.
 
@@ -127,9 +127,9 @@ Opens at **http://localhost:8501**
 
 ```
 1  Open the app in your browser
-   ↓
+       ↓
 2  Click "Fetch + Train Model" in the sidebar
-   ↓
+       ↓
 3  The OpenF1 pipeline runs automatically  (~3 – 8 min)
    ├─ Downloads sessions, results & grids (2023–2025)
    ├─ Fetches tyre stints, pit stops & weather
@@ -137,14 +137,14 @@ Opens at **http://localhost:8501**
    ├─ Engineers all 37 predictive features
    ├─ Trains XGBoost + Random Forest
    └─ Saves models to /models/
-   ↓
+       ↓
 4  (Optional) Click "Fetch Telemetry (FastF1)"
    └─ Adds 9 deep telemetry features: quali_gap_ms · sector deltas ·
       lap_consistency · race_pace_delta · tyre_deg_rate · throttle_pct · sc_laps_actual
-   ↓
+       ↓
 5  (If telemetry fetched) Click "Fetch + Train Model" again
    └─ Retrains the model with the enriched 37-feature set
-   ↓
+       ↓
 6  Go to Race Predictor → select a GP → Run Prediction
 ```
 
