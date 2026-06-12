@@ -238,11 +238,11 @@ pitwall_intel/
 On every prediction, the app makes five live API calls before running inference:
 
 ```
-OpenF1 /v1/championship_drivers    → g champ_points_before · position · gap_to_leader
-OpenF1 /v1/stints                  →  starting_compound · total_stints · avg_tyre_age
-OpenF1 /v1/pit                     →  num_pit_stops · avg_stop_duration
-OpenF1 /v1/race_control            →  sc_probability (live circuit history)
-OpenF1 /v1/drivers                 →  current driver lineup + team assignments
+OpenF1 /v1/championship_drivers    →   champ_points_before · position · gap_to_leader
+OpenF1 /v1/stints                  →   starting_compound · total_stints · avg_tyre_age
+OpenF1 /v1/pit                     →   num_pit_stops · avg_stop_duration
+OpenF1 /v1/race_control            →   sc_probability (live circuit history)
+OpenF1 /v1/drivers                 →   current driver lineup + team assignments
 ```
 
 Where live data is unavailable, the app falls back to the most recent value from the training dataset, then to a sensible default — in that priority order.
